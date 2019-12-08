@@ -75,6 +75,13 @@
 									<div class='form-group'>
 									    {{ form_label(form.bottle) }}
 									    {{ form_widget(form.bottle, { attr: { 'class': 'form-control' }}) }}
+											{% if form.vars.value.bottle|length > 0 %}
+											<div>
+												<a target='__blank' href='/resources/files/{{form.vars.value.bottle}}'>
+													<img style='width:400px;' src='/resources/files/{{form.vars.value.bottle}}'/>
+												</a>
+											</div>
+											{% endif %}
 									</div>
 
 									<div class='form-group'>

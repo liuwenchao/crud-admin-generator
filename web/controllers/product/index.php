@@ -512,6 +512,8 @@ $app->match('/product/edit/{id}', function ($id) use ($app) {
 									// ... handle exception if something happens during file upload
 							}
 							$data['bottle'] = $newFilename;
+						} else {
+							$data['bottle'] = $row_sql['bottle'];
 						}
             $update_query = "UPDATE `product` SET `provider_id` = ?, `category_id` = ?, `size` = ?, `unit` = ?, `category2` = ?, `size2` = ?, `unit2` = ?, `package_code` = ?, `bottle` = ?, `material_id` = ?, `minimal_order` = ?, `pre_price` = ?, `full_price` = ?, `open_mould_period` = ?, `sample_period` = ?, `payment_method` = ?, `supply_period` = ?, `memo` = ? WHERE `id` = ?";
             $app['db']->executeUpdate($update_query, array($data['provider_id'], $data['category_id'], $data['size'], $data['unit'], $data['category2'], $data['size2'], $data['unit2'], $data['package_code'], $data['bottle'], $data['material_id'], $data['minimal_order'], $data['pre_price'], $data['full_price'], $data['open_mould_period'], $data['sample_period'], $data['payment_method'], $data['supply_period'], $data['memo'], $id));            
