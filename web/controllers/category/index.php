@@ -47,17 +47,15 @@ $app->match('/category/list', function (Symfony\Component\HttpFoundation\Request
     $table_columns = array(
 		'id', 
 		'name', 
-		'gmt_create', 
-		'gmt_modified', 
-
+		'gmt_create',
+		'gmt_modified',
     );
     
     $table_columns_type = array(
 		'char(1)', 
 		'char(8)', 
-		'timestamp', 
-		'timestamp', 
-
+		'timestamp',
+		'timestamp',
     );    
     
     $whereClause = "";
@@ -180,8 +178,6 @@ $app->match('/category/create', function () use ($app) {
     $initial_data = array(
 		'id' => '', 
 		'name' => '', 
-		'gmt_create' => '', 
-		'gmt_modified' => '', 
 
     );
 
@@ -191,8 +187,6 @@ $app->match('/category/create', function () use ($app) {
 
 	$form = $form->add('id', 'text', array('required' => true));
 	$form = $form->add('name', 'text', array('required' => true));
-	$form = $form->add('gmt_create', 'text', array('required' => true));
-	$form = $form->add('gmt_modified', 'text', array('required' => true));
 
 
     $form = $form->getForm();
@@ -204,8 +198,8 @@ $app->match('/category/create', function () use ($app) {
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $update_query = "INSERT INTO `category` (`id`, `name`, `gmt_create`, `gmt_modified`) VALUES (?, ?, ?, ?)";
-            $app['db']->executeUpdate($update_query, array($data['id'], $data['name'], $data['gmt_create'], $data['gmt_modified']));            
+            $update_query = "INSERT INTO `category` (`id`, `name`) VALUES (?, ?)";
+            $app['db']->executeUpdate($update_query, array($data['id'], $data['name']));            
 
 
             $app['session']->getFlashBag()->add(
