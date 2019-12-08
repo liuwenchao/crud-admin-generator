@@ -24,7 +24,7 @@
 					}
 				],
 				rowCallback: function( row, data ) {
-					var actions = '<a href="product/edit/' + data.{{primary_key}} + '" class="btn btn-primary btn-xs">Edit</a> <a href="product/delete/' + data.{{primary_key}} + '" onclick="return confirm_delete();" class="btn btn-danger btn-xs">Delete</a>';
+					var actions = '<a href="product/edit/' + data.{{primary_key}} + '" class="btn btn-primary btn-xs">修改</a> <a href="product/delete/' + data.{{primary_key}} + '" onclick="return confirm_delete();" class="btn btn-danger btn-xs">删除</a>';
 					$('td:eq({{ table_columns|length }})', row).html( actions );
 				}
 			});
@@ -50,7 +50,7 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
-                    Product list
+                    产品库
                 </h1>
             </section>
 
@@ -79,7 +79,7 @@
                                             {% for table_column in table_columns %}
                                             <th>{{ table_column }}</th>
                                             {% endfor %}
-                                            <th>Actions</th>
+                                            <th>操作</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -87,7 +87,7 @@
                                             {% for table_column in table_columns %}
                                             <th>{{ table_column }}</th>
                                             {% endfor %}
-                                            <th>Actions</th>
+                                            <th>操作</th>
                                         </tr>
                                     </tfoot>
                                 </table>

@@ -2,51 +2,51 @@
 
 {% block menu %}
 
-<li class="treeview {% if option is defined and (option == 'category_list' or option == 'category_create' or option == 'category_edit') %}active{% endif %}">
+<li class="treeview {% if option is defined and (option == 'product_list' or option == 'product_create' or option == 'product_edit') %}active{% endif %}">
     <a href="#">
         <i class="fa fa-folder-o"></i>
-        <span>category</span>
+        <span>产品库</span>
         <i class="fa pull-right fa-angle-right"></i>
     </a>
     <ul class="treeview-menu" style="display: none;">
-        <li {% if option is defined and option == 'category_list' %}class="active"{% endif %}><a href="{{ path('category_list') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> List</a></li>
-        <li {% if option is defined and option == 'category_create' %}class="active"{% endif %}><a href="{{ path('category_create') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> Create</a></li>
+        <li {% if option is defined and option == 'product_list' %}class="active"{% endif %}><a href="{{ path('product_list') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> 列表</a></li>
+        <li {% if option is defined and option == 'product_create' %}class="active"{% endif %}><a href="{{ path('product_create') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> 录入</a></li>
+    </ul>
+</li>
+
+<li class="treeview {% if option is defined and (option == 'category_list' or option == 'category_create' or option == 'category_edit') %}active{% endif %}">
+    <a href="#">
+        <i class="fa fa-folder-o"></i>
+        <span>供应品类</span>
+        <i class="fa pull-right fa-angle-right"></i>
+    </a>
+    <ul class="treeview-menu" style="display: none;">
+        <li {% if option is defined and option == 'category_list' %}class="active"{% endif %}><a href="{{ path('category_list') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> 列表</a></li>
+        <li {% if option is defined and option == 'category_create' %}class="active"{% endif %}><a href="{{ path('category_create') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> 录入</a></li>
     </ul>
 </li>
 
 <li class="treeview {% if option is defined and (option == 'material_list' or option == 'material_create' or option == 'material_edit') %}active{% endif %}">
     <a href="#">
         <i class="fa fa-folder-o"></i>
-        <span>material</span>
+        <span>材质管理</span>
         <i class="fa pull-right fa-angle-right"></i>
     </a>
     <ul class="treeview-menu" style="display: none;">
-        <li {% if option is defined and option == 'material_list' %}class="active"{% endif %}><a href="{{ path('material_list') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> List</a></li>
-        <li {% if option is defined and option == 'material_create' %}class="active"{% endif %}><a href="{{ path('material_create') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> Create</a></li>
-    </ul>
-</li>
-
-<li class="treeview {% if option is defined and (option == 'product_list' or option == 'product_create' or option == 'product_edit') %}active{% endif %}">
-    <a href="#">
-        <i class="fa fa-folder-o"></i>
-        <span>product</span>
-        <i class="fa pull-right fa-angle-right"></i>
-    </a>
-    <ul class="treeview-menu" style="display: none;">
-        <li {% if option is defined and option == 'product_list' %}class="active"{% endif %}><a href="{{ path('product_list') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> List</a></li>
-        <li {% if option is defined and option == 'product_create' %}class="active"{% endif %}><a href="{{ path('product_create') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> Create</a></li>
+        <li {% if option is defined and option == 'material_list' %}class="active"{% endif %}><a href="{{ path('material_list') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> 列表</a></li>
+        <li {% if option is defined and option == 'material_create' %}class="active"{% endif %}><a href="{{ path('material_create') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> 录入</a></li>
     </ul>
 </li>
 
 <li class="treeview {% if option is defined and (option == 'provider_list' or option == 'provider_create' or option == 'provider_edit') %}active{% endif %}">
     <a href="#">
         <i class="fa fa-folder-o"></i>
-        <span>provider</span>
+        <span>供应商</span>
         <i class="fa pull-right fa-angle-right"></i>
     </a>
     <ul class="treeview-menu" style="display: none;">
-        <li {% if option is defined and option == 'provider_list' %}class="active"{% endif %}><a href="{{ path('provider_list') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> List</a></li>
-        <li {% if option is defined and option == 'provider_create' %}class="active"{% endif %}><a href="{{ path('provider_create') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> Create</a></li>
+        <li {% if option is defined and option == 'provider_list' %}class="active"{% endif %}><a href="{{ path('provider_list') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> 列表</a></li>
+        <li {% if option is defined and option == 'provider_create' %}class="active"{% endif %}><a href="{{ path('provider_create') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> 录入</a></li>
     </ul>
 </li>
 
