@@ -131,8 +131,15 @@ $app->match('/product/list', function (Symfony\Component\HttpFoundation\Request 
 			    $findexternal_row = $app['db']->fetchAssoc($findexternal_sql, array($row_sql[$table_columns[$i]]));
 			    $rows[$row_key][$table_columns[$i]] = $findexternal_row['name'];
 			}
-			else{
-			    $rows[$row_key][$table_columns[$i]] = $row_sql[$table_columns[$i]];
+			else if( $table_columns_type[$i] != "blob") {
+					$rows[$row_key][$table_columns[$i]] = $row_sql[$table_columns[$i]];
+			} else {				
+					if( !$row_sql[$table_columns[$i]] ) {
+							$rows[$row_key][$table_columns[$i]] = "";
+					} else {
+							$image_url = "/resources/files/" . $row_sql[$table_columns[$i]];
+							$rows[$row_key][$table_columns[$i]] = " <a target='__blank' href='$image_url'><img style='width:40px;' src='$image_url'/></a>";
+					}
 			}
 
 
@@ -333,7 +340,20 @@ $app->match('/product/create', function () use ($app) {
 
         if ($form->isValid()) {
             $data = $form->getData();
+						if ($bottleFile = $form['bottle']->getData()) {
+							$newFilename = uniqid().'.'.$bottleFile->guessExtension();
 
+							// Move the file to the directory where brochures are stored
+							try {
+									$bottleFile->move(
+											'resources/files/',
+											$newFilename
+									);
+							} catch (FileException $e) {
+									// ... handle exception if something happens during file upload
+							}
+							$data['bottle'] = $newFilename;
+						}
             $update_query = "INSERT INTO `product` (`provider_id`, `category_id`, `size`, `unit`, `category2`, `size2`, `unit2`, `package_code`, `bottle`, `material_id`, `minimal_order`, `pre_price`, `full_price`, `open_mould_period`, `sample_period`, `payment_method`, `supply_period`, `memo`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $app['db']->executeUpdate($update_query, array($data['provider_id'], $data['category_id'], $data['size'], $data['unit'], $data['category2'], $data['size2'], $data['unit2'], $data['package_code'], $data['bottle'], $data['material_id'], $data['minimal_order'], $data['pre_price'], $data['full_price'], $data['open_mould_period'], $data['sample_period'], $data['payment_method'], $data['supply_period'], $data['memo']));            
 
@@ -460,7 +480,7 @@ $app->match('/product/edit/{id}', function ($id) use ($app) {
 	$form = $form->add('size2', 'text', array('required' => false));
 	$form = $form->add('unit2', 'text', array('required' => false));
 	$form = $form->add('package_code', 'text', array('required' => false));
-	$form = $form->add('bottle', 'file', array('required' => false));
+	$form = $form->add('bottle', 'file', array('required' => false, 'data_class' => null));
 	$form = $form->add('minimal_order', 'text', array('required' => false));
 	$form = $form->add('pre_price', 'text', array('required' => true));
 	$form = $form->add('full_price', 'text', array('required' => true));
@@ -479,7 +499,20 @@ $app->match('/product/edit/{id}', function ($id) use ($app) {
 
         if ($form->isValid()) {
             $data = $form->getData();
+						if ($bottleFile = $form['bottle']->getData()) {
+							$newFilename = uniqid().'.'.$bottleFile->guessExtension();
 
+							// Move the file to the directory where brochures are stored
+							try {
+									$bottleFile->move(
+											'resources/files/',
+											$newFilename
+									);
+							} catch (FileException $e) {
+									// ... handle exception if something happens during file upload
+							}
+							$data['bottle'] = $newFilename;
+						}
             $update_query = "UPDATE `product` SET `provider_id` = ?, `category_id` = ?, `size` = ?, `unit` = ?, `category2` = ?, `size2` = ?, `unit2` = ?, `package_code` = ?, `bottle` = ?, `material_id` = ?, `minimal_order` = ?, `pre_price` = ?, `full_price` = ?, `open_mould_period` = ?, `sample_period` = ?, `payment_method` = ?, `supply_period` = ?, `memo` = ? WHERE `id` = ?";
             $app['db']->executeUpdate($update_query, array($data['provider_id'], $data['category_id'], $data['size'], $data['unit'], $data['category2'], $data['size2'], $data['unit2'], $data['package_code'], $data['bottle'], $data['material_id'], $data['minimal_order'], $data['pre_price'], $data['full_price'], $data['open_mould_period'], $data['sample_period'], $data['payment_method'], $data['supply_period'], $data['memo'], $id));            
 
