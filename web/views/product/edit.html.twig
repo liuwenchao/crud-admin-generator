@@ -11,7 +11,7 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
-                    修改产品 {{ id }}
+                    Edit Product {{ id }}
                 </h1>
             </section>
 
@@ -77,9 +77,9 @@
 									    {{ form_widget(form.bottle, { attr: { 'class': 'form-control' }}) }}
 											{% if form.vars.value.bottle|length > 0 %}
 											<div>
-												<a target='__blank' href='/resources/files/{{form.vars.value.bottle}}'>
-													<img style='width:400px;' src='/resources/files/{{form.vars.value.bottle}}'/>
-												</a>
+															<a target='__blank' href='/resources/files/{{form.vars.value.bottle}}'>
+																			<img style='width:400px;' src='/resources/files/{{form.vars.value.bottle}}'/>
+															</a>
 											</div>
 											{% endif %}
 									</div>
@@ -127,6 +127,16 @@
 									<div class='form-group'>
 									    {{ form_label(form.memo) }}
 									    {{ form_widget(form.memo, { attr: { 'class': 'form-control textarea', 'style': 'width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;' }}) }}
+									</div>
+
+									<div class='form-group'>
+									    {{ form_label(form.brand_id) }}
+									    {{ form_widget(form.brand_id, { attr: { 'class': 'form-control' }}) }}
+									</div>
+
+									<div class='form-group'>
+									    {{ form_label(form.code) }}
+									    {{ form_widget(form.code, { attr: { 'class': 'form-control' }}) }}
 									</div>
 
                                                  

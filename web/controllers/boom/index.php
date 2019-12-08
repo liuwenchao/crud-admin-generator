@@ -18,7 +18,7 @@ require_once __DIR__.'/../../../src/utils.php';
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-$app->match('/category/list', function (Symfony\Component\HttpFoundation\Request $request) use ($app) {  
+$app->match('/boom/list', function (Symfony\Component\HttpFoundation\Request $request) use ($app) {  
     $start = 0;
     $vars = $request->request->all();
     $qsStart = (int)$vars["start"];
@@ -47,16 +47,16 @@ $app->match('/category/list', function (Symfony\Component\HttpFoundation\Request
     $table_columns = array(
 		'id', 
 		'name', 
-		'gmt_create', 
-		'gmt_modified', 
+		'code', 
+		'product_id', 
 
     );
     
     $table_columns_type = array(
-		'char(1)', 
-		'char(8)', 
-		'timestamp', 
-		'timestamp', 
+		'int(11)', 
+		'varchar(8)', 
+		'char(12)', 
+		'int(11)', 
 
     );    
     
@@ -78,27 +78,23 @@ $app->match('/category/list', function (Symfony\Component\HttpFoundation\Request
         $i = $i + 1;
     }
     
-    $recordsTotal = $app['db']->fetchColumn("SELECT COUNT(*) FROM `category`" . $whereClause . $orderClause, array(), 0);
+    $recordsTotal = $app['db']->fetchColumn("SELECT COUNT(*) FROM `boom`" . $whereClause . $orderClause, array(), 0);
     
-    $find_sql = "SELECT * FROM `category`". $whereClause . $orderClause . " LIMIT ". $index . "," . $rowsPerPage;
+    $find_sql = "SELECT * FROM `boom`". $whereClause . $orderClause . " LIMIT ". $index . "," . $rowsPerPage;
     $rows_sql = $app['db']->fetchAll($find_sql, array());
 
     foreach($rows_sql as $row_key => $row_sql){
         for($i = 0; $i < count($table_columns); $i++){
 
-		if( $table_columns_type[$i] != "blob") {
-				$rows[$row_key][$table_columns[$i]] = $row_sql[$table_columns[$i]];
-		} else {				if( !$row_sql[$table_columns[$i]] ) {
-						$rows[$row_key][$table_columns[$i]] = "0 Kb.";
-				} else {
-						$rows[$row_key][$table_columns[$i]] = " <a target='__blank' href='menu/download?id=" . $row_sql[$table_columns[0]];
-						$rows[$row_key][$table_columns[$i]] .= "&fldname=" . $table_columns[$i];
-						$rows[$row_key][$table_columns[$i]] .= "&idfld=" . $table_columns[0];
-						$rows[$row_key][$table_columns[$i]] .= "'>";
-						$rows[$row_key][$table_columns[$i]] .= number_format(strlen($row_sql[$table_columns[$i]]) / 1024, 2) . " Kb.";
-						$rows[$row_key][$table_columns[$i]] .= "</a>";
-				}
-		}
+			if($table_columns[$i] == 'product_id'){
+			    $findexternal_sql = 'SELECT `id` FROM `product` WHERE `id` = ?';
+			    $findexternal_row = $app['db']->fetchAssoc($findexternal_sql, array($row_sql[$table_columns[$i]]));
+			    $rows[$row_key][$table_columns[$i]] = $findexternal_row['id'];
+			}
+			else{
+			    $rows[$row_key][$table_columns[$i]] = $row_sql[$table_columns[$i]];
+			}
+
 
         }
     }    
@@ -116,7 +112,7 @@ $app->match('/category/list', function (Symfony\Component\HttpFoundation\Request
 
 
 /* Download blob img */
-$app->match('/category/download', function (Symfony\Component\HttpFoundation\Request $request) use ($app) { 
+$app->match('/boom/download', function (Symfony\Component\HttpFoundation\Request $request) use ($app) { 
     
     // menu
     $rowid = $request->get('id');
@@ -125,7 +121,7 @@ $app->match('/category/download', function (Symfony\Component\HttpFoundation\Req
     
     if( !$rowid || !$fieldname ) die("Invalid data");
     
-    $find_sql = "SELECT " . $fieldname . " FROM " . category . " WHERE ".$idfldname." = ?";
+    $find_sql = "SELECT " . $fieldname . " FROM " . boom . " WHERE ".$idfldname." = ?";
     $row_sql = $app['db']->fetchAssoc($find_sql, array($rowid));
 
     if(!$row_sql){
@@ -153,46 +149,61 @@ $app->match('/category/download', function (Symfony\Component\HttpFoundation\Req
 
 
 
-$app->match('/category', function () use ($app) {
+$app->match('/boom', function () use ($app) {
     
 	$table_columns = array(
 		'id', 
 		'name', 
-		'gmt_create', 
-		'gmt_modified', 
+		'code', 
+		'product_id', 
 
     );
 
     $primary_key = "id";	
 
-    return $app['twig']->render('category/list.html.twig', array(
+    return $app['twig']->render('boom/list.html.twig', array(
     	"table_columns" => $table_columns,
         "primary_key" => $primary_key
     ));
         
 })
-->bind('category_list');
+->bind('boom_list');
 
 
 
-$app->match('/category/create', function () use ($app) {
+$app->match('/boom/create', function () use ($app) {
     
     $initial_data = array(
-		'id' => '', 
 		'name' => '', 
-		'gmt_create' => '', 
-		'gmt_modified' => '', 
+		'code' => '', 
+		'product_id' => '', 
 
     );
 
     $form = $app['form.factory']->createBuilder('form', $initial_data);
 
+	$options = array();
+	$findexternal_sql = 'SELECT `id`, `id` FROM `product`';
+	$findexternal_rows = $app['db']->fetchAll($findexternal_sql, array());
+	foreach($findexternal_rows as $findexternal_row){
+	    $options[$findexternal_row['id']] = $findexternal_row['id'];
+	}
+	if(count($options) > 0){
+	    $form = $form->add('product_id', 'choice', array(
+	        'required' => true,
+	        'choices' => $options,
+	        'expanded' => false,
+	        'constraints' => new Assert\Choice(array_keys($options))
+	    ));
+	}
+	else{
+	    $form = $form->add('product_id', 'text', array('required' => true));
+	}
 
 
-	$form = $form->add('id', 'text', array('required' => true));
+
 	$form = $form->add('name', 'text', array('required' => true));
-	$form = $form->add('gmt_create', 'text', array('required' => true));
-	$form = $form->add('gmt_modified', 'text', array('required' => true));
+	$form = $form->add('code', 'text', array('required' => true));
 
 
     $form = $form->getForm();
@@ -204,33 +215,33 @@ $app->match('/category/create', function () use ($app) {
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $update_query = "INSERT INTO `category` (`id`, `name`, `gmt_create`, `gmt_modified`) VALUES (?, ?, ?, ?)";
-            $app['db']->executeUpdate($update_query, array($data['id'], $data['name'], $data['gmt_create'], $data['gmt_modified']));            
+            $update_query = "INSERT INTO `boom` (`name`, `code`, `product_id`) VALUES (?, ?, ?)";
+            $app['db']->executeUpdate($update_query, array($data['name'], $data['code'], $data['product_id']));            
 
 
             $app['session']->getFlashBag()->add(
                 'success',
                 array(
-                    'message' => 'category created!',
+                    'message' => 'boom created!',
                 )
             );
-            return $app->redirect($app['url_generator']->generate('category_list'));
+            return $app->redirect($app['url_generator']->generate('boom_list'));
 
         }
     }
 
-    return $app['twig']->render('category/create.html.twig', array(
+    return $app['twig']->render('boom/create.html.twig', array(
         "form" => $form->createView()
     ));
         
 })
-->bind('category_create');
+->bind('boom_create');
 
 
 
-$app->match('/category/edit/{id}', function ($id) use ($app) {
+$app->match('/boom/edit/{id}', function ($id) use ($app) {
 
-    $find_sql = "SELECT * FROM `category` WHERE `id` = ?";
+    $find_sql = "SELECT * FROM `boom` WHERE `id` = ?";
     $row_sql = $app['db']->fetchAssoc($find_sql, array($id));
 
     if(!$row_sql){
@@ -240,26 +251,41 @@ $app->match('/category/edit/{id}', function ($id) use ($app) {
                 'message' => 'Row not found!',
             )
         );        
-        return $app->redirect($app['url_generator']->generate('category_list'));
+        return $app->redirect($app['url_generator']->generate('boom_list'));
     }
 
     
     $initial_data = array(
-		'id' => $row_sql['id'], 
 		'name' => $row_sql['name'], 
-		'gmt_create' => $row_sql['gmt_create'], 
-		'gmt_modified' => $row_sql['gmt_modified'], 
+		'code' => $row_sql['code'], 
+		'product_id' => $row_sql['product_id'], 
 
     );
 
 
     $form = $app['form.factory']->createBuilder('form', $initial_data);
 
+	$options = array();
+	$findexternal_sql = 'SELECT `id`, `id` FROM `product`';
+	$findexternal_rows = $app['db']->fetchAll($findexternal_sql, array());
+	foreach($findexternal_rows as $findexternal_row){
+	    $options[$findexternal_row['id']] = $findexternal_row['id'];
+	}
+	if(count($options) > 0){
+	    $form = $form->add('product_id', 'choice', array(
+	        'required' => true,
+	        'choices' => $options,
+	        'expanded' => false,
+	        'constraints' => new Assert\Choice(array_keys($options))
+	    ));
+	}
+	else{
+	    $form = $form->add('product_id', 'text', array('required' => true));
+	}
 
-	$form = $form->add('id', 'text', array('required' => true));
+
 	$form = $form->add('name', 'text', array('required' => true));
-	$form = $form->add('gmt_create', 'text', array('required' => true));
-	$form = $form->add('gmt_modified', 'text', array('required' => true));
+	$form = $form->add('code', 'text', array('required' => true));
 
 
     $form = $form->getForm();
@@ -271,43 +297,43 @@ $app->match('/category/edit/{id}', function ($id) use ($app) {
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $update_query = "UPDATE `category` SET `id` = ?, `name` = ?, `gmt_create` = ?, `gmt_modified` = ? WHERE `id` = ?";
-            $app['db']->executeUpdate($update_query, array($data['id'], $data['name'], $data['gmt_create'], $data['gmt_modified'], $id));            
+            $update_query = "UPDATE `boom` SET `name` = ?, `code` = ?, `product_id` = ? WHERE `id` = ?";
+            $app['db']->executeUpdate($update_query, array($data['name'], $data['code'], $data['product_id'], $id));            
 
 
             $app['session']->getFlashBag()->add(
                 'success',
                 array(
-                    'message' => 'category edited!',
+                    'message' => 'boom edited!',
                 )
             );
-            return $app->redirect($app['url_generator']->generate('category_edit', array("id" => $id)));
+            return $app->redirect($app['url_generator']->generate('boom_edit', array("id" => $id)));
 
         }
     }
 
-    return $app['twig']->render('category/edit.html.twig', array(
+    return $app['twig']->render('boom/edit.html.twig', array(
         "form" => $form->createView(),
         "id" => $id
     ));
         
 })
-->bind('category_edit');
+->bind('boom_edit');
 
 
-$app->match('/category/delete/{id}', function ($id) use ($app) {
+$app->match('/boom/delete/{id}', function ($id) use ($app) {
 
-    $find_sql = "SELECT * FROM `category` WHERE `id` = ?";
+    $find_sql = "SELECT * FROM `boom` WHERE `id` = ?";
     $row_sql = $app['db']->fetchAssoc($find_sql, array($id));
 
     if($row_sql){
-        $delete_query = "DELETE FROM `category` WHERE `id` = ?";
+        $delete_query = "DELETE FROM `boom` WHERE `id` = ?";
         $app['db']->executeUpdate($delete_query, array($id));
 
         $app['session']->getFlashBag()->add(
             'success',
             array(
-                'message' => 'category deleted!',
+                'message' => 'boom deleted!',
             )
         );
     }
@@ -320,28 +346,28 @@ $app->match('/category/delete/{id}', function ($id) use ($app) {
         );  
     }
 
-    return $app->redirect($app['url_generator']->generate('category_list'));
+    return $app->redirect($app['url_generator']->generate('boom_list'));
 
 })
-->bind('category_delete');
+->bind('boom_delete');
 
 
 
-$app->match('/category/downloadList', function (Symfony\Component\HttpFoundation\Request $request) use($app){
+$app->match('/boom/downloadList', function (Symfony\Component\HttpFoundation\Request $request) use($app){
     
     $table_columns = array(
 		'id', 
 		'name', 
-		'gmt_create', 
-		'gmt_modified', 
+		'code', 
+		'product_id', 
 
     );
     
     $table_columns_type = array(
-		'char(1)', 
-		'char(8)', 
-		'timestamp', 
-		'timestamp', 
+		'int(11)', 
+		'varchar(8)', 
+		'char(12)', 
+		'int(11)', 
 
     );   
 
@@ -357,7 +383,7 @@ $app->match('/category/downloadList', function (Symfony\Component\HttpFoundation
         return '`'.$row.'`';
     }, $table_columns));
      
-    $find_sql = "SELECT ".$columns_to_select." FROM `category`";
+    $find_sql = "SELECT ".$columns_to_select." FROM `boom`";
     $rows_sql = $app['db']->fetchAll($find_sql, array());
   
     $mpdf = new mPDF();
@@ -373,7 +399,7 @@ $app->match('/category/downloadList', function (Symfony\Component\HttpFoundation
 
     $mpdf->WriteHTML(build_table($rows_sql));
     $mpdf->Output();
-})->bind('category_downloadList');
+})->bind('boom_downloadList');
 
 
 

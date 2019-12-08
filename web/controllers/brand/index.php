@@ -18,7 +18,7 @@ require_once __DIR__.'/../../../src/utils.php';
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-$app->match('/category/list', function (Symfony\Component\HttpFoundation\Request $request) use ($app) {  
+$app->match('/brand/list', function (Symfony\Component\HttpFoundation\Request $request) use ($app) {  
     $start = 0;
     $vars = $request->request->all();
     $qsStart = (int)$vars["start"];
@@ -47,16 +47,12 @@ $app->match('/category/list', function (Symfony\Component\HttpFoundation\Request
     $table_columns = array(
 		'id', 
 		'name', 
-		'gmt_create', 
-		'gmt_modified', 
 
     );
     
     $table_columns_type = array(
-		'char(1)', 
-		'char(8)', 
-		'timestamp', 
-		'timestamp', 
+		'int(11)', 
+		'varchar(8)', 
 
     );    
     
@@ -78,9 +74,9 @@ $app->match('/category/list', function (Symfony\Component\HttpFoundation\Request
         $i = $i + 1;
     }
     
-    $recordsTotal = $app['db']->fetchColumn("SELECT COUNT(*) FROM `category`" . $whereClause . $orderClause, array(), 0);
+    $recordsTotal = $app['db']->fetchColumn("SELECT COUNT(*) FROM `brand`" . $whereClause . $orderClause, array(), 0);
     
-    $find_sql = "SELECT * FROM `category`". $whereClause . $orderClause . " LIMIT ". $index . "," . $rowsPerPage;
+    $find_sql = "SELECT * FROM `brand`". $whereClause . $orderClause . " LIMIT ". $index . "," . $rowsPerPage;
     $rows_sql = $app['db']->fetchAll($find_sql, array());
 
     foreach($rows_sql as $row_key => $row_sql){
@@ -116,7 +112,7 @@ $app->match('/category/list', function (Symfony\Component\HttpFoundation\Request
 
 
 /* Download blob img */
-$app->match('/category/download', function (Symfony\Component\HttpFoundation\Request $request) use ($app) { 
+$app->match('/brand/download', function (Symfony\Component\HttpFoundation\Request $request) use ($app) { 
     
     // menu
     $rowid = $request->get('id');
@@ -125,7 +121,7 @@ $app->match('/category/download', function (Symfony\Component\HttpFoundation\Req
     
     if( !$rowid || !$fieldname ) die("Invalid data");
     
-    $find_sql = "SELECT " . $fieldname . " FROM " . category . " WHERE ".$idfldname." = ?";
+    $find_sql = "SELECT " . $fieldname . " FROM " . brand . " WHERE ".$idfldname." = ?";
     $row_sql = $app['db']->fetchAssoc($find_sql, array($rowid));
 
     if(!$row_sql){
@@ -153,35 +149,30 @@ $app->match('/category/download', function (Symfony\Component\HttpFoundation\Req
 
 
 
-$app->match('/category', function () use ($app) {
+$app->match('/brand', function () use ($app) {
     
 	$table_columns = array(
 		'id', 
 		'name', 
-		'gmt_create', 
-		'gmt_modified', 
 
     );
 
     $primary_key = "id";	
 
-    return $app['twig']->render('category/list.html.twig', array(
+    return $app['twig']->render('brand/list.html.twig', array(
     	"table_columns" => $table_columns,
         "primary_key" => $primary_key
     ));
         
 })
-->bind('category_list');
+->bind('brand_list');
 
 
 
-$app->match('/category/create', function () use ($app) {
+$app->match('/brand/create', function () use ($app) {
     
     $initial_data = array(
-		'id' => '', 
 		'name' => '', 
-		'gmt_create' => '', 
-		'gmt_modified' => '', 
 
     );
 
@@ -189,10 +180,7 @@ $app->match('/category/create', function () use ($app) {
 
 
 
-	$form = $form->add('id', 'text', array('required' => true));
-	$form = $form->add('name', 'text', array('required' => true));
-	$form = $form->add('gmt_create', 'text', array('required' => true));
-	$form = $form->add('gmt_modified', 'text', array('required' => true));
+	$form = $form->add('name', 'text', array('required' => false));
 
 
     $form = $form->getForm();
@@ -204,33 +192,33 @@ $app->match('/category/create', function () use ($app) {
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $update_query = "INSERT INTO `category` (`id`, `name`, `gmt_create`, `gmt_modified`) VALUES (?, ?, ?, ?)";
-            $app['db']->executeUpdate($update_query, array($data['id'], $data['name'], $data['gmt_create'], $data['gmt_modified']));            
+            $update_query = "INSERT INTO `brand` (`name`) VALUES (?)";
+            $app['db']->executeUpdate($update_query, array($data['name']));            
 
 
             $app['session']->getFlashBag()->add(
                 'success',
                 array(
-                    'message' => 'category created!',
+                    'message' => 'brand created!',
                 )
             );
-            return $app->redirect($app['url_generator']->generate('category_list'));
+            return $app->redirect($app['url_generator']->generate('brand_list'));
 
         }
     }
 
-    return $app['twig']->render('category/create.html.twig', array(
+    return $app['twig']->render('brand/create.html.twig', array(
         "form" => $form->createView()
     ));
         
 })
-->bind('category_create');
+->bind('brand_create');
 
 
 
-$app->match('/category/edit/{id}', function ($id) use ($app) {
+$app->match('/brand/edit/{id}', function ($id) use ($app) {
 
-    $find_sql = "SELECT * FROM `category` WHERE `id` = ?";
+    $find_sql = "SELECT * FROM `brand` WHERE `id` = ?";
     $row_sql = $app['db']->fetchAssoc($find_sql, array($id));
 
     if(!$row_sql){
@@ -240,15 +228,12 @@ $app->match('/category/edit/{id}', function ($id) use ($app) {
                 'message' => 'Row not found!',
             )
         );        
-        return $app->redirect($app['url_generator']->generate('category_list'));
+        return $app->redirect($app['url_generator']->generate('brand_list'));
     }
 
     
     $initial_data = array(
-		'id' => $row_sql['id'], 
 		'name' => $row_sql['name'], 
-		'gmt_create' => $row_sql['gmt_create'], 
-		'gmt_modified' => $row_sql['gmt_modified'], 
 
     );
 
@@ -256,10 +241,7 @@ $app->match('/category/edit/{id}', function ($id) use ($app) {
     $form = $app['form.factory']->createBuilder('form', $initial_data);
 
 
-	$form = $form->add('id', 'text', array('required' => true));
-	$form = $form->add('name', 'text', array('required' => true));
-	$form = $form->add('gmt_create', 'text', array('required' => true));
-	$form = $form->add('gmt_modified', 'text', array('required' => true));
+	$form = $form->add('name', 'text', array('required' => false));
 
 
     $form = $form->getForm();
@@ -271,43 +253,43 @@ $app->match('/category/edit/{id}', function ($id) use ($app) {
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $update_query = "UPDATE `category` SET `id` = ?, `name` = ?, `gmt_create` = ?, `gmt_modified` = ? WHERE `id` = ?";
-            $app['db']->executeUpdate($update_query, array($data['id'], $data['name'], $data['gmt_create'], $data['gmt_modified'], $id));            
+            $update_query = "UPDATE `brand` SET `name` = ? WHERE `id` = ?";
+            $app['db']->executeUpdate($update_query, array($data['name'], $id));            
 
 
             $app['session']->getFlashBag()->add(
                 'success',
                 array(
-                    'message' => 'category edited!',
+                    'message' => 'brand edited!',
                 )
             );
-            return $app->redirect($app['url_generator']->generate('category_edit', array("id" => $id)));
+            return $app->redirect($app['url_generator']->generate('brand_edit', array("id" => $id)));
 
         }
     }
 
-    return $app['twig']->render('category/edit.html.twig', array(
+    return $app['twig']->render('brand/edit.html.twig', array(
         "form" => $form->createView(),
         "id" => $id
     ));
         
 })
-->bind('category_edit');
+->bind('brand_edit');
 
 
-$app->match('/category/delete/{id}', function ($id) use ($app) {
+$app->match('/brand/delete/{id}', function ($id) use ($app) {
 
-    $find_sql = "SELECT * FROM `category` WHERE `id` = ?";
+    $find_sql = "SELECT * FROM `brand` WHERE `id` = ?";
     $row_sql = $app['db']->fetchAssoc($find_sql, array($id));
 
     if($row_sql){
-        $delete_query = "DELETE FROM `category` WHERE `id` = ?";
+        $delete_query = "DELETE FROM `brand` WHERE `id` = ?";
         $app['db']->executeUpdate($delete_query, array($id));
 
         $app['session']->getFlashBag()->add(
             'success',
             array(
-                'message' => 'category deleted!',
+                'message' => 'brand deleted!',
             )
         );
     }
@@ -320,28 +302,24 @@ $app->match('/category/delete/{id}', function ($id) use ($app) {
         );  
     }
 
-    return $app->redirect($app['url_generator']->generate('category_list'));
+    return $app->redirect($app['url_generator']->generate('brand_list'));
 
 })
-->bind('category_delete');
+->bind('brand_delete');
 
 
 
-$app->match('/category/downloadList', function (Symfony\Component\HttpFoundation\Request $request) use($app){
+$app->match('/brand/downloadList', function (Symfony\Component\HttpFoundation\Request $request) use($app){
     
     $table_columns = array(
 		'id', 
 		'name', 
-		'gmt_create', 
-		'gmt_modified', 
 
     );
     
     $table_columns_type = array(
-		'char(1)', 
-		'char(8)', 
-		'timestamp', 
-		'timestamp', 
+		'int(11)', 
+		'varchar(8)', 
 
     );   
 
@@ -357,7 +335,7 @@ $app->match('/category/downloadList', function (Symfony\Component\HttpFoundation
         return '`'.$row.'`';
     }, $table_columns));
      
-    $find_sql = "SELECT ".$columns_to_select." FROM `category`";
+    $find_sql = "SELECT ".$columns_to_select." FROM `brand`";
     $rows_sql = $app['db']->fetchAll($find_sql, array());
   
     $mpdf = new mPDF();
@@ -373,7 +351,7 @@ $app->match('/category/downloadList', function (Symfony\Component\HttpFoundation
 
     $mpdf->WriteHTML(build_table($rows_sql));
     $mpdf->Output();
-})->bind('category_downloadList');
+})->bind('brand_downloadList');
 
 
 

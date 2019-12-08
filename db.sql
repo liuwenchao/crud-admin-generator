@@ -16,6 +16,55 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `boom`
+--
+
+DROP TABLE IF EXISTS `boom`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `boom` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(8) COLLATE utf8mb4_general_ci NOT NULL COMMENT '名字',
+  `code` char(12) COLLATE utf8mb4_general_ci NOT NULL COMMENT '编码',
+  `product_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `boom`
+--
+
+LOCK TABLES `boom` WRITE;
+/*!40000 ALTER TABLE `boom` DISABLE KEYS */;
+/*!40000 ALTER TABLE `boom` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `brand`
+--
+
+DROP TABLE IF EXISTS `brand`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `brand` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(8) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `brand`
+--
+
+LOCK TABLES `brand` WRITE;
+/*!40000 ALTER TABLE `brand` DISABLE KEYS */;
+INSERT INTO `brand` VALUES (1,'暖岛');
+/*!40000 ALTER TABLE `brand` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `category`
 --
 
@@ -94,6 +143,8 @@ CREATE TABLE `product` (
   `payment_method` varchar(8) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '付款方式',
   `supply_period` varchar(8) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '供货周期',
   `memo` text COLLATE utf8mb4_general_ci COMMENT '备注',
+  `brand_id` int(11) NOT NULL COMMENT '品牌',
+  `code` char(8) COLLATE utf8mb4_general_ci NOT NULL COMMENT '成品编码',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -104,7 +155,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,1,'Y',130,'ML',NULL,NULL,NULL,'2NDA001A04AZ',NULL,'SL',100,2.35,5.35,'2周','1周','中国银行','1月','这个品需要严控质量'),(2,1,'Y',150,'ML',NULL,NULL,NULL,'2NDA001A04AP',_binary '5deccbe120965.jpeg','JS',100,2.35,8.35,'2周','1周','中国银行','1月','双十二'),(3,1,'Y',180,'ML',NULL,NULL,NULL,'2NDA001A04AO',_binary '5decce882348d.jpeg','JS',200,2.35,18.00,'2周','1周','中国银行','1月','无');
+INSERT INTO `product` VALUES (1,1,'Y',130,'ML',NULL,NULL,NULL,'2NDA001A04AZ',NULL,'SL',100,2.35,5.35,'2周','1周','中国银行','1月','这个品需要严控质量',1,'0NDA003A'),(2,1,'Y',150,'ML',NULL,NULL,NULL,'2NDA001A04AP',_binary '5deccbe120965.jpeg','JS',100,2.35,8.35,'2周','1周','中国银行','1月','双十二',1,'0NDA002A'),(3,1,'Y',180,'ML',NULL,NULL,NULL,'2NDA001A04AO',_binary '5decce882348d.jpeg','JS',200,2.35,18.00,'2周','1周','中国银行','1月','无',1,'0NDA001A');
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -146,4 +197,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-08 18:43:37
+-- Dump completed on 2019-12-08 20:22:00

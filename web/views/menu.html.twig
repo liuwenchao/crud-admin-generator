@@ -14,10 +14,34 @@
     </ul>
 </li>
 
+<li class="treeview {% if option is defined and (option == 'boom_list' or option == 'boom_create' or option == 'boom_edit') %}active{% endif %}">
+    <a href="#">
+        <i class="fa fa-folder-o"></i>
+        <span>Boom</span>
+        <i class="fa pull-right fa-angle-right"></i>
+    </a>
+    <ul class="treeview-menu" style="display: none;">
+        <li {% if option is defined and option == 'boom_list' %}class="active"{% endif %}><a href="{{ path('boom_list') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> 列表</a></li>
+        <li {% if option is defined and option == 'boom_create' %}class="active"{% endif %}><a href="{{ path('boom_create') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> 录入</a></li>
+    </ul>
+</li>
+
+<li class="treeview {% if option is defined and (option == 'brand_list' or option == 'brand_create' or option == 'brand_edit') %}active{% endif %}">
+    <a href="#">
+        <i class="fa fa-folder-o"></i>
+        <span>品牌管理</span>
+        <i class="fa pull-right fa-angle-right"></i>
+    </a>
+    <ul class="treeview-menu" style="display: none;">
+        <li {% if option is defined and option == 'brand_list' %}class="active"{% endif %}><a href="{{ path('brand_list') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> 列表</a></li>
+        <li {% if option is defined and option == 'brand_create' %}class="active"{% endif %}><a href="{{ path('brand_create') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> 录入</a></li>
+    </ul>
+</li>
+
 <li class="treeview {% if option is defined and (option == 'category_list' or option == 'category_create' or option == 'category_edit') %}active{% endif %}">
     <a href="#">
         <i class="fa fa-folder-o"></i>
-        <span>供应品类</span>
+        <span>品类管理</span>
         <i class="fa pull-right fa-angle-right"></i>
     </a>
     <ul class="treeview-menu" style="display: none;">
