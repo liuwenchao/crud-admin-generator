@@ -1,2 +1,4 @@
 vendor/
+resources/files
+log
 composer.lock
