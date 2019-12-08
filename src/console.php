@@ -260,6 +260,10 @@ $console
 							$FIELDS_FOR_FORM .= "" .
 							"\t" . "\$form = \$form->add('" . $table_column['name'] . "', 'textarea', array('required' => " . $field_nullable . "));" . "\n";
 						}
+						else if(strpos($table_column['type'], 'blob') !== false){
+							$FIELDS_FOR_FORM .= "" .
+							"\t" . "\$form = \$form->add('" . $table_column['name'] . "', 'file', array('required' => " . $field_nullable . "));" . "\n";
+						}
 						else{
 							$FIELDS_FOR_FORM .= "" .
 							"\t" . "\$form = \$form->add('" . $table_column['name'] . "', 'text', array('required' => " . $field_nullable . "));" . "\n";
