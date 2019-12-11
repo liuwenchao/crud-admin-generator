@@ -50,7 +50,7 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
-                    Product list
+                    产品库列表
                 </h1>
             </section>
 
@@ -68,7 +68,7 @@
                             </div><!-- /.box-header -->
 
                             <div class="box-body table-responsive">
-                                <a class="btn btn-primary" href="{{ path('product_create') }}">Create new product</a>
+                                <a class="btn btn-primary" href="{{ path('product_create') }}">录入新产品</a>
 <!--
 <a class="btn btn-primary" href="{{ path('product_downloadList') }}">Download list of product as PDF</a>
 -->
@@ -79,7 +79,7 @@
                                             {% for table_column in table_columns %}
                                             <th>{{ table_column }}</th>
                                             {% endfor %}
-                                            <th>Actions</th>
+                                            <th>操作</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -87,7 +87,7 @@
                                             {% for table_column in table_columns %}
                                             <th>{{ table_column }}</th>
                                             {% endfor %}
-                                            <th>Actions</th>
+                                            <th>操作</th>
                                         </tr>
                                     </tfoot>
                                 </table>
