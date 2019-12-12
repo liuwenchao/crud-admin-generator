@@ -119,7 +119,7 @@ $app->match('/product/list', function (Symfony\Component\HttpFoundation\Request 
 	
     $recordsTotal = $app['db']->fetchColumn("SELECT COUNT(*) FROM `product` a inner join provider b on a.provider_id = b.id inner join category c on a.category_id=c.id inner join material d on a.material_id = d.id inner join brand e on a.brand_id = e.id" . $whereClause . $orderClause, array(), 0);
     
-    $find_sql = "SELECT * FROM `product` a inner join provider b on a.provider_id = b.id inner join category c on a.category_id=c.id inner join material d on a.material_id = d.id inner join brand e on a.brand_id = e.id". $whereClause . $orderClause . " LIMIT ". $index . "," . $rowsPerPage;
+    $find_sql = "SELECT a.* FROM `product` a inner join provider b on a.provider_id = b.id inner join category c on a.category_id=c.id inner join material d on a.material_id = d.id inner join brand e on a.brand_id = e.id". $whereClause . $orderClause . " LIMIT ". $index . "," . $rowsPerPage;
     $rows_sql = $app['db']->fetchAll($find_sql, array());
 
     foreach($rows_sql as $row_key => $row_sql){
@@ -151,8 +151,11 @@ $app->match('/product/list', function (Symfony\Component\HttpFoundation\Request 
 				if( !$row_sql[$table_columns[$i]] ) {
 					$rows[$row_key][$table_columns[$i]] = "";
 				} else {
-					$image_url = "/resources/files/" . $row_sql[$table_columns[$i]];
-					$rows[$row_key][$table_columns[$i]] = " <a target='__blank' href='$image_url'><img style='width:40px;' src='$image_url'/></a>";
+					
+					foreach (explode(',',$row_sql[$table_columns[$i]]) as $img) {
+						$image_url = "/resources/files/" . $img;
+						$rows[$row_key][$table_columns[$i]] .= " <a target='__blank' href='$image_url'><img style='width:40px;' src='$image_url'/></a>";
+					}
 				}
 			}
 
@@ -569,7 +572,7 @@ $app->match('/product/edit/{id}', function ($id) use ($app) {
 							} catch (FileException $e) {
 									// ... handle exception if something happens during file upload
 							}
-							$data['bottle'] = $newFilename;
+							$data['bottle'] = $newFilename . ',' . $row_sql['bottle'];
 						} else {
 							$data['bottle'] = $row_sql['bottle'];
 						}
