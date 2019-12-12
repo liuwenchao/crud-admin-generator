@@ -74,6 +74,16 @@
     </ul>
 </li>
 
-
+<li class="treeview {% if option is defined and (option == 'trademark_list' or option == 'trademark_create' or option == 'trademark_edit') %}active{% endif %}">
+    <a href="#">
+        <i class="fa fa-folder-o"></i>
+        <span>商标库</span>
+        <i class="fa pull-right fa-angle-right"></i>
+    </a>
+    <ul class="treeview-menu" style="display: none;">
+        <li {% if option is defined and option == 'trademark_list' %}class="active"{% endif %}><a href="{{ path('trademark_list') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> 列表</a></li>
+        <li {% if option is defined and option == 'trademark_create' %}class="active"{% endif %}><a href="{{ path('trademark_create') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> 录入</a></li>
+    </ul>
+</li>
 
 {% endblock %}
