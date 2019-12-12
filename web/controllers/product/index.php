@@ -146,14 +146,14 @@ $app->match('/product/list', function (Symfony\Component\HttpFoundation\Request 
 			    $rows[$row_key][$table_columns[$i]] = $findexternal_row['name'];
 			}
 			else if( $table_columns_type[$i] != "blob") {
-					$rows[$row_key][$table_columns[$i]] = $row_sql[$table_columns[$i]];
+				$rows[$row_key][$table_columns[$i]] = $row_sql[$table_columns[$i]];
 			} else {                                
-					if( !$row_sql[$table_columns[$i]] ) {
-							$rows[$row_key][$table_columns[$i]] = "";
-					} else {
-							$image_url = "/resources/files/" . $row_sql[$table_columns[$i]];
-							$rows[$row_key][$table_columns[$i]] = " <a target='__blank' href='$image_url'><img style='width:40px;' src='$image_url'/></a>";
-					}
+				if( !$row_sql[$table_columns[$i]] ) {
+					$rows[$row_key][$table_columns[$i]] = "";
+				} else {
+					$image_url = "/resources/files/" . $row_sql[$table_columns[$i]];
+					$rows[$row_key][$table_columns[$i]] = " <a target='__blank' href='$image_url'><img style='width:40px;' src='$image_url'/></a>";
+				}
 			}
 
 
