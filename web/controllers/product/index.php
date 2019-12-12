@@ -51,8 +51,6 @@ $app->match('/product/list', function (Symfony\Component\HttpFoundation\Request 
 		'size', 
 		'unit', 
 		'category2', 
-		'size2', 
-		'unit2', 
 		'package_code', 
 		'bottle', 
 		'material_id', 
@@ -75,9 +73,7 @@ $app->match('/product/list', function (Symfony\Component\HttpFoundation\Request 
 		'char(1)', 
 		'int(11)', 
 		'varchar(2)', 
-		'varchar(2)', 
-		'int(11)', 
-		'varchar(2)', 
+		'varchar(255)', 
 		'char(14)', 
 		'blob', 
 		'char(2)', 
@@ -151,7 +147,6 @@ $app->match('/product/list', function (Symfony\Component\HttpFoundation\Request 
 				if( !$row_sql[$table_columns[$i]] ) {
 					$rows[$row_key][$table_columns[$i]] = "";
 				} else {
-					
 					foreach (explode(',',$row_sql[$table_columns[$i]]) as $img) {
 						$image_url = "/resources/files/" . $img;
 						$rows[$row_key][$table_columns[$i]] .= " <a target='__blank' href='$image_url'><img style='width:40px;' src='$image_url'/></a>";
@@ -222,8 +217,6 @@ $app->match('/product', function () use ($app) {
 		'size', 
 		'unit', 
 		'category2', 
-		'size2', 
-		'unit2', 
 		'package_code', 
 		'bottle', 
 		'material_id', 
@@ -260,8 +253,6 @@ $app->match('/product/create', function () use ($app) {
 		'size' => '', 
 		'unit' => '', 
 		'category2' => '', 
-		'size2' => '', 
-		'unit2' => '', 
 		'package_code' => '', 
 		'bottle' => '', 
 		'material_id' => '', 
@@ -352,13 +343,9 @@ $app->match('/product/create', function () use ($app) {
 	    $form = $form->add('brand_id', 'text', array('required' => true));
 	}
 
-
-
 	$form = $form->add('size', 'text', array('required' => true));
 	$form = $form->add('unit', 'text', array('required' => true));
-	$form = $form->add('category2', 'text', array('required' => false));
-	$form = $form->add('size2', 'text', array('required' => false));
-	$form = $form->add('unit2', 'text', array('required' => false));
+	$form = $form->add('category2', 'textarea', array('required' => false));
 	$form = $form->add('package_code', 'text', array('required' => false));
 	$form = $form->add('bottle', 'file', array('required' => false));
 	$form = $form->add('minimal_order', 'text', array('required' => false));
@@ -394,8 +381,8 @@ $app->match('/product/create', function () use ($app) {
 								}
 								$data['bottle'] = $newFilename;
 						}
-            $update_query = "INSERT INTO `product` (`provider_id`, `category_id`, `size`, `unit`, `category2`, `size2`, `unit2`, `package_code`, `bottle`, `material_id`, `minimal_order`, `pre_price`, `full_price`, `open_mould_period`, `sample_period`, `payment_method`, `supply_period`, `memo`, `brand_id`, `code`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $app['db']->executeUpdate($update_query, array($data['provider_id'], $data['category_id'], $data['size'], $data['unit'], $data['category2'], $data['size2'], $data['unit2'], $data['package_code'], $data['bottle'], $data['material_id'], $data['minimal_order'], $data['pre_price'], $data['full_price'], $data['open_mould_period'], $data['sample_period'], $data['payment_method'], $data['supply_period'], $data['memo'], $data['brand_id'], $data['code']));            
+            $update_query = "INSERT INTO `product` (`provider_id`, `category_id`, `size`, `unit`, `category2`, `package_code`, `bottle`, `material_id`, `minimal_order`, `pre_price`, `full_price`, `open_mould_period`, `sample_period`, `payment_method`, `supply_period`, `memo`, `brand_id`, `code`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $app['db']->executeUpdate($update_query, array($data['provider_id'], $data['category_id'], $data['size'], $data['unit'], $data['category2'], $data['package_code'], $data['bottle'], $data['material_id'], $data['minimal_order'], $data['pre_price'], $data['full_price'], $data['open_mould_period'], $data['sample_period'], $data['payment_method'], $data['supply_period'], $data['memo'], $data['brand_id'], $data['code']));            
 
 
             $app['session']->getFlashBag()->add(
@@ -440,8 +427,6 @@ $app->match('/product/edit/{id}', function ($id) use ($app) {
 		'size' => $row_sql['size'], 
 		'unit' => $row_sql['unit'], 
 		'category2' => $row_sql['category2'], 
-		'size2' => $row_sql['size2'], 
-		'unit2' => $row_sql['unit2'], 
 		'package_code' => $row_sql['package_code'], 
 		'bottle' => $row_sql['bottle'], 
 		'material_id' => $row_sql['material_id'], 
@@ -536,9 +521,7 @@ $app->match('/product/edit/{id}', function ($id) use ($app) {
 
 	$form = $form->add('size', 'text', array('required' => true));
 	$form = $form->add('unit', 'text', array('required' => true));
-	$form = $form->add('category2', 'text', array('required' => false));
-	$form = $form->add('size2', 'text', array('required' => false));
-	$form = $form->add('unit2', 'text', array('required' => false));
+	$form = $form->add('category2', 'textarea', array('required' => false));
 	$form = $form->add('package_code', 'text', array('required' => false));
 	$form = $form->add('bottle', 'file', array('required' => false, 'data_class' => null));
 	$form = $form->add('minimal_order', 'text', array('required' => false));
@@ -576,8 +559,8 @@ $app->match('/product/edit/{id}', function ($id) use ($app) {
 						} else {
 							$data['bottle'] = $row_sql['bottle'];
 						}
-            $update_query = "UPDATE `product` SET `provider_id` = ?, `category_id` = ?, `size` = ?, `unit` = ?, `category2` = ?, `size2` = ?, `unit2` = ?, `package_code` = ?, `bottle` = ?, `material_id` = ?, `minimal_order` = ?, `pre_price` = ?, `full_price` = ?, `open_mould_period` = ?, `sample_period` = ?, `payment_method` = ?, `supply_period` = ?, `memo` = ?, `brand_id` = ?, `code` = ? WHERE `id` = ?";
-            $app['db']->executeUpdate($update_query, array($data['provider_id'], $data['category_id'], $data['size'], $data['unit'], $data['category2'], $data['size2'], $data['unit2'], $data['package_code'], $data['bottle'], $data['material_id'], $data['minimal_order'], $data['pre_price'], $data['full_price'], $data['open_mould_period'], $data['sample_period'], $data['payment_method'], $data['supply_period'], $data['memo'], $data['brand_id'], $data['code'], $id));            
+            $update_query = "UPDATE `product` SET `provider_id` = ?, `category_id` = ?, `size` = ?, `unit` = ?, `category2` = ?, `package_code` = ?, `bottle` = ?, `material_id` = ?, `minimal_order` = ?, `pre_price` = ?, `full_price` = ?, `open_mould_period` = ?, `sample_period` = ?, `payment_method` = ?, `supply_period` = ?, `memo` = ?, `brand_id` = ?, `code` = ? WHERE `id` = ?";
+            $app['db']->executeUpdate($update_query, array($data['provider_id'], $data['category_id'], $data['size'], $data['unit'], $data['category2'], $data['package_code'], $data['bottle'], $data['material_id'], $data['minimal_order'], $data['pre_price'], $data['full_price'], $data['open_mould_period'], $data['sample_period'], $data['payment_method'], $data['supply_period'], $data['memo'], $data['brand_id'], $data['code'], $id));            
 
 
             $app['session']->getFlashBag()->add(
@@ -641,8 +624,6 @@ $app->match('/product/downloadList', function (Symfony\Component\HttpFoundation\
 		'size', 
 		'unit', 
 		'category2', 
-		'size2', 
-		'unit2', 
 		'package_code', 
 		'bottle', 
 		'material_id', 
