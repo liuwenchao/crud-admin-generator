@@ -52,6 +52,12 @@ $app->match('/provider/list', function (Symfony\Component\HttpFoundation\Request
 		'address', 
 		'contact', 
 		'phone', 
+		'background', 
+		'technology', 
+		'capacity', 
+		'price', 
+		'net', 
+		'service', 
 
     );
     
@@ -63,6 +69,12 @@ $app->match('/provider/list', function (Symfony\Component\HttpFoundation\Request
 		'varchar(255)', 
 		'varchar(255)', 
 		'varchar(15)', 
+		'smallint(5) unsigned', 
+		'smallint(5) unsigned', 
+		'smallint(5) unsigned', 
+		'smallint(5) unsigned', 
+		'smallint(5) unsigned', 
+		'smallint(5) unsigned', 
 
     );    
     
@@ -169,6 +181,12 @@ $app->match('/provider', function () use ($app) {
 		'address', 
 		'contact', 
 		'phone', 
+		'background', 
+		'technology', 
+		'capacity', 
+		'price', 
+		'net', 
+		'service', 
 
     );
 
@@ -193,6 +211,12 @@ $app->match('/provider/create', function () use ($app) {
 		'address' => '', 
 		'contact' => '', 
 		'phone' => '', 
+		'background' => '', 
+		'technology' => '', 
+		'capacity' => '', 
+		'price' => '', 
+		'net' => '', 
+		'service' => '', 
 
     );
 
@@ -206,6 +230,12 @@ $app->match('/provider/create', function () use ($app) {
 	$form = $form->add('address', 'text', array('required' => true));
 	$form = $form->add('contact', 'text', array('required' => true));
 	$form = $form->add('phone', 'text', array('required' => true));
+	$form = $form->add('background', 'text', array('required' => true));
+	$form = $form->add('technology', 'text', array('required' => true));
+	$form = $form->add('capacity', 'text', array('required' => true));
+	$form = $form->add('price', 'text', array('required' => true));
+	$form = $form->add('net', 'text', array('required' => true));
+	$form = $form->add('service', 'text', array('required' => true));
 
 
     $form = $form->getForm();
@@ -217,8 +247,8 @@ $app->match('/provider/create', function () use ($app) {
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $update_query = "INSERT INTO `provider` (`code`, `name`, `license`, `address`, `contact`, `phone`) VALUES (?, ?, ?, ?, ?, ?)";
-            $app['db']->executeUpdate($update_query, array($data['code'], $data['name'], $data['license'], $data['address'], $data['contact'], $data['phone']));            
+            $update_query = "INSERT INTO `provider` (`code`, `name`, `license`, `address`, `contact`, `phone`, `background`, `technology`, `capacity`, `price`, `net`, `service`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $app['db']->executeUpdate($update_query, array($data['code'], $data['name'], $data['license'], $data['address'], $data['contact'], $data['phone'], $data['background'], $data['technology'], $data['capacity'], $data['price'], $data['net'], $data['service']));            
 
 
             $app['session']->getFlashBag()->add(
@@ -264,6 +294,12 @@ $app->match('/provider/edit/{id}', function ($id) use ($app) {
 		'address' => $row_sql['address'], 
 		'contact' => $row_sql['contact'], 
 		'phone' => $row_sql['phone'], 
+		'background' => $row_sql['background'], 
+		'technology' => $row_sql['technology'], 
+		'capacity' => $row_sql['capacity'], 
+		'price' => $row_sql['price'], 
+		'net' => $row_sql['net'], 
+		'service' => $row_sql['service'], 
 
     );
 
@@ -277,6 +313,12 @@ $app->match('/provider/edit/{id}', function ($id) use ($app) {
 	$form = $form->add('address', 'text', array('required' => true));
 	$form = $form->add('contact', 'text', array('required' => true));
 	$form = $form->add('phone', 'text', array('required' => true));
+	$form = $form->add('background', 'text', array('required' => true));
+	$form = $form->add('technology', 'text', array('required' => true));
+	$form = $form->add('capacity', 'text', array('required' => true));
+	$form = $form->add('price', 'text', array('required' => true));
+	$form = $form->add('net', 'text', array('required' => true));
+	$form = $form->add('service', 'text', array('required' => true));
 
 
     $form = $form->getForm();
@@ -288,8 +330,8 @@ $app->match('/provider/edit/{id}', function ($id) use ($app) {
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $update_query = "UPDATE `provider` SET `code` = ?, `name` = ?, `license` = ?, `address` = ?, `contact` = ?, `phone` = ? WHERE `id` = ?";
-            $app['db']->executeUpdate($update_query, array($data['code'], $data['name'], $data['license'], $data['address'], $data['contact'], $data['phone'], $id));            
+            $update_query = "UPDATE `provider` SET `code` = ?, `name` = ?, `license` = ?, `address` = ?, `contact` = ?, `phone` = ?, `background` = ?, `technology` = ?, `capacity` = ?, `price` = ?, `net` = ?, `service` = ? WHERE `id` = ?";
+            $app['db']->executeUpdate($update_query, array($data['code'], $data['name'], $data['license'], $data['address'], $data['contact'], $data['phone'], $data['background'], $data['technology'], $data['capacity'], $data['price'], $data['net'], $data['service'], $id));            
 
 
             $app['session']->getFlashBag()->add(
@@ -354,6 +396,12 @@ $app->match('/provider/downloadList', function (Symfony\Component\HttpFoundation
 		'address', 
 		'contact', 
 		'phone', 
+		'background', 
+		'technology', 
+		'capacity', 
+		'price', 
+		'net', 
+		'service', 
 
     );
     
@@ -365,6 +413,12 @@ $app->match('/provider/downloadList', function (Symfony\Component\HttpFoundation
 		'varchar(255)', 
 		'varchar(255)', 
 		'varchar(15)', 
+		'smallint(5) unsigned', 
+		'smallint(5) unsigned', 
+		'smallint(5) unsigned', 
+		'smallint(5) unsigned', 
+		'smallint(5) unsigned', 
+		'smallint(5) unsigned', 
 
     );   
 

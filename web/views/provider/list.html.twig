@@ -5,6 +5,7 @@
     {{ parent() }}
 
     <!-- page script -->
+    <script src="https://cdn.staticfile.org/echarts/4.4.0-rc.1/echarts.min.js"></script>
     <script type="text/javascript">
         $(function() {
             $("#provider_list").dataTable({
@@ -14,18 +15,80 @@
                     "type": "POST"
 				},
 				columns: [
-					{% for table_column in table_columns %}
-					{ "data": "{{ table_column }}"},
-                    {% endfor %}
+					{ "data": "code"},
+					{ "data": "name"},
+					{ "data": "license"},
+					{ "data": "address"},
+					{ "data": "contact"},
+					{ "data": "phone"},
+                    {
+						"orderable": false,
+						"data": null,
+						"defaultContent": "<div class='radar-cell' style='width:250px;height:250px'></div>",
+                        "searchable": false
+					},
 					{
 						"orderable": false,
 						"data": null,
 						"defaultContent": null,
+                        "searchable": false
 					}
 				],
 				rowCallback: function( row, data ) {
 					var actions = '<a href="provider/edit/' + data.{{primary_key}} + '" class="btn btn-primary btn-xs">Edit</a> <a href="provider/delete/' + data.{{primary_key}} + '" onclick="return confirm_delete();" class="btn btn-danger btn-xs">Delete</a>';
-					$('td:eq({{ table_columns|length }})', row).html( actions );
+					$('td:eq(7)', row).html( actions );
+                },
+                initComplete: function( settings, json ) {
+                    $.each($('.radar-cell'), function(i, e){
+                        echarts.init(e).setOption({
+                            tooltip: {},
+                            radar: {
+                                // shape: 'circle',
+                                name: {
+                                    textStyle: {
+                                        color: '#fff',
+                                        backgroundColor: '#999',
+                                        borderRadius: 3,
+                                        padding: [3, 5]
+                                    }
+                                },
+                                indicator: [
+                                    { name: '工程背景', max: 20},
+                                    { name: '研发实力', max: 20},
+                                    { name: '产能', max: 20},
+                                    { name: '价格', max: 20},
+                                    { name: '账期', max: 20},
+                                    { name: '服务', max: 20}
+                                ]
+                            },
+                            series: [{
+                                name: json.data[i].name,
+                                type: 'radar',
+                                // areaStyle: {normal: {}},
+                                data : [
+                                    {
+                                        value : [json.data[i].background, json.data[i].technology, json.data[i].capacity, json.data[i].price, json.data[i].net, json.data[i].service],
+                                        name : json.data[i].name,
+                                        areaStyle: {
+                                            normal: {
+                                                opacity: 0.9,
+                                                color: new echarts.graphic.RadialGradient(0.5, 0.5, 1, [
+                                                    {
+                                                        color: '#B8D3E4',
+                                                        offset: 0
+                                                    },
+                                                    {
+                                                        color: '#72ACD1',
+                                                        offset: 1
+                                                    }
+                                                ])
+                                            }
+                                        }
+                                    }
+                                ]
+                            }]
+                        });
+                    });
 				}
 			});
         });
@@ -35,7 +98,6 @@
                 return false;
             }
         }
-
     </script>
 {% endblock %}
 
@@ -76,20 +138,16 @@
                                 <table id="provider_list" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            {% for table_column in table_columns %}
-                                            <th>{{ table_column }}</th>
-                                            {% endfor %}
-                                            <th>Actions</th>
+                                            <th>编码</th>
+                                            <th>名字</th>
+                                            <th>执照</th>
+                                            <th>地址</th>
+                                            <th>联系人</th>
+                                            <th>电话</th>
+                                            <th style="width: 200px">雷达图</th>
+                                            <th>操作</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
-                                        <tr>
-                                            {% for table_column in table_columns %}
-                                            <th>{{ table_column }}</th>
-                                            {% endfor %}
-                                            <th>Actions</th>
-                                        </tr>
-                                    </tfoot>
                                 </table>
                             </div><!-- /.box-body -->
                         </div><!-- /.box -->
