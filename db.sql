@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.17, for osx10.14 (x86_64)
 --
--- Host: localhost    Database: qidian
+-- Host: 127.0.0.1    Database: qidian
 -- ------------------------------------------------------
 -- Server version	8.0.17
 
@@ -24,8 +24,8 @@ DROP TABLE IF EXISTS `boom`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `boom` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(8) COLLATE utf8mb4_general_ci NOT NULL COMMENT '名字',
-  `code` char(12) COLLATE utf8mb4_general_ci NOT NULL COMMENT '编码',
+  `name` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名字',
+  `code` char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '编码',
   `product_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -49,9 +49,9 @@ DROP TABLE IF EXISTS `brand`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `brand` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(8) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `name` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -60,7 +60,7 @@ CREATE TABLE `brand` (
 
 LOCK TABLES `brand` WRITE;
 /*!40000 ALTER TABLE `brand` DISABLE KEYS */;
-INSERT INTO `brand` VALUES (1,'暖岛');
+INSERT INTO `brand` VALUES (0,'空白品牌'),(1,'暖导');
 /*!40000 ALTER TABLE `brand` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -72,8 +72,8 @@ DROP TABLE IF EXISTS `category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `category` (
-  `id` char(1) COLLATE utf8mb4_general_ci NOT NULL,
-  `name` char(8) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `name` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -98,8 +98,8 @@ DROP TABLE IF EXISTS `material`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `material` (
-  `id` char(2) COLLATE utf8mb4_general_ci NOT NULL,
-  `name` char(8) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `name` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -126,25 +126,23 @@ DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `provider_id` int(11) NOT NULL COMMENT '供应商',
-  `category_id` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '供应品类',
+  `category_id` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '供应品类',
   `size` int(11) NOT NULL COMMENT '主规格数量',
-  `unit` varchar(2) COLLATE utf8mb4_general_ci NOT NULL COMMENT '主规格单位',
-  `category2` varchar(2) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '二级规格类型',
-  `size2` int(11) DEFAULT NULL COMMENT '二级规格数量',
-  `unit2` varchar(2) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '二级规格单位',
-  `package_code` char(14) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '包材代码',
+  `unit` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '主规格单位',
+  `category2` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '二级规格',
+  `package_code` char(14) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '包材代码',
   `bottle` blob COMMENT '瓶器图片',
-  `material_id` char(2) COLLATE utf8mb4_general_ci NOT NULL COMMENT '材质',
+  `material_id` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '材质',
   `minimal_order` int(11) DEFAULT NULL COMMENT '起订量',
   `pre_price` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '税前价格',
   `full_price` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '含税含运价格',
-  `open_mould_period` varchar(8) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '开模周期',
-  `sample_period` varchar(8) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '打样周期',
-  `payment_method` varchar(8) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '付款方式',
-  `supply_period` varchar(8) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '供货周期',
-  `memo` text COLLATE utf8mb4_general_ci COMMENT '备注',
+  `open_mould_period` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '开模周期',
+  `sample_period` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '打样周期',
+  `payment_method` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '付款方式',
+  `supply_period` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '供货周期',
+  `memo` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT '备注',
   `brand_id` int(11) NOT NULL COMMENT '品牌',
-  `code` char(8) COLLATE utf8mb4_general_ci NOT NULL COMMENT '成品编码',
+  `code` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '成品编码',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -155,7 +153,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,1,'Y',130,'ML',NULL,NULL,NULL,'2NDA001A04AZ',NULL,'SL',100,2.35,5.35,'2周','1周','中国银行','1月','这个品需要严控质量',1,'0NDA003A'),(2,1,'Y',150,'ML',NULL,NULL,NULL,'2NDA001A04AP',_binary '5deccbe120965.jpeg','JS',100,2.35,8.35,'2周','1周','中国银行','1月','双十二',1,'0NDA002A'),(3,1,'Y',180,'ML',NULL,NULL,NULL,'2NDA001A04AO',_binary '5decce882348d.jpeg','JS',200,2.35,18.00,'2周','1周','中国银行','1月','无',1,'0NDA001A');
+INSERT INTO `product` VALUES (1,1,'Y',130,'ML','瓶口 20cm\r\n泵头 压泵','2NDA001A04AZ',_binary '5df6f96a858de.jpeg,5df2082ab677d.jpeg,5df204af8d8d7.jpeg','SL',100,2.35,5.35,'2周','1周','中国银行','1月','这个品需要严控质量',1,'0NDA003A'),(2,1,'Y',150,'ML',NULL,'2NDA001A04AP',_binary '5deccbe120965.jpeg','JS',100,2.35,8.35,'2周','1周','中国银行','1月','双十二',1,'0NDA002A'),(3,2,'Y',180,'ML',NULL,'2NDA001A04AO',_binary '5decce882348d.jpeg','JS',200,2.35,18.00,'2周','1周','中国银行','1月','无',1,'0NDA001A');
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -168,12 +166,18 @@ DROP TABLE IF EXISTS `provider`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `provider` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `code` varchar(5) COLLATE utf8mb4_general_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `license` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `address` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `contact` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `phone` varchar(15) COLLATE utf8mb4_general_ci NOT NULL,
+  `code` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `license` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `contact` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `phone` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `background` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '工厂背景',
+  `technology` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '研发实力',
+  `capacity` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '产能',
+  `price` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '价格',
+  `net` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '账期',
+  `service` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '服务',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -184,8 +188,41 @@ CREATE TABLE `provider` (
 
 LOCK TABLES `provider` WRITE;
 /*!40000 ALTER TABLE `provider` DISABLE KEYS */;
-INSERT INTO `provider` VALUES (1,'SEEFU','金华惜福制造有限公司','datada','金华二服路188号','王惜福','17375757575'),(2,'WANCA','余姚旺财制造有限公司','datada','余姚大发路39号','李旺财','17353535353');
+INSERT INTO `provider` VALUES (1,'SEEFU','金华惜福制造有限公司','datada','金华二服路188号','王惜福','17375757575',18,17,15,10,20,14),(2,'WANCA','余姚旺财制造有限公司','datada','余姚大发路39号','李旺财','17353535353',20,15,18,19,20,12);
 /*!40000 ALTER TABLE `provider` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `trademark`
+--
+
+DROP TABLE IF EXISTS `trademark`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `trademark` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) COLLATE utf8mb4_general_ci NOT NULL COMMENT '名字',
+  `logo` blob NOT NULL COMMENT '图片',
+  `number` varchar(10) COLLATE utf8mb4_general_ci NOT NULL COMMENT '商标号',
+  `owner` varchar(255) COLLATE utf8mb4_general_ci NOT NULL COMMENT '申请人',
+  `category` tinyint(4) NOT NULL COMMENT '类别',
+  `apply_date` date NOT NULL DEFAULT '2019-10-01' COMMENT '申请日期',
+  `publish_date` date NOT NULL DEFAULT '2019-10-01' COMMENT '初审公告日期',
+  `register_date` date NOT NULL DEFAULT '2019-10-01' COMMENT '注册日期',
+  `scope` text COLLATE utf8mb4_general_ci COMMENT '使用商品范围',
+  `status` varchar(63) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '申请中' COMMENT '状态',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `trademark`
+--
+
+LOCK TABLES `trademark` WRITE;
+/*!40000 ALTER TABLE `trademark` DISABLE KEYS */;
+INSERT INTO `trademark` VALUES (2,'笛木',_binary '/private/var/folders/2h/2sps6x4147v0j7bc_f_7p6kr0000gn/T/phpLrLIIy','45879876','杭州笛木生物科技有限公司',10,'2019-10-01','2019-11-01','2019-11-01','按摩器械,医疗器械和仪器,假牙套,理疗设备,医用冷敷贴,口罩,奶瓶,避孕套,假肢,矫形鞋,缝合材料','申请中');
+/*!40000 ALTER TABLE `trademark` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -197,4 +234,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-08 20:22:00
+-- Dump completed on 2019-12-19 18:37:52
