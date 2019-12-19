@@ -48,6 +48,14 @@ $app->match('/trademark/list', function (Symfony\Component\HttpFoundation\Reques
 		'id', 
 		'name', 
 		'logo', 
+		'number', 
+		'owner', 
+		'category', 
+		'apply_date', 
+		'publish_date', 
+		'register_date', 
+		'scope', 
+		'status', 
 
     );
     
@@ -55,6 +63,14 @@ $app->match('/trademark/list', function (Symfony\Component\HttpFoundation\Reques
 		'int(11)', 
 		'varchar(20)', 
 		'blob', 
+		'varchar(10)', 
+		'varchar(255)', 
+		'tinyint(4)', 
+		'date', 
+		'date', 
+		'date', 
+		'text', 
+		'varchar(63)', 
 
     );    
     
@@ -157,6 +173,14 @@ $app->match('/trademark', function () use ($app) {
 		'id', 
 		'name', 
 		'logo', 
+		'number', 
+		'owner', 
+		'category', 
+		'apply_date', 
+		'publish_date', 
+		'register_date', 
+		'scope', 
+		'status', 
 
     );
 
@@ -177,6 +201,14 @@ $app->match('/trademark/create', function () use ($app) {
     $initial_data = array(
 		'name' => '', 
 		'logo' => '', 
+		'number' => '', 
+		'owner' => '', 
+		'category' => '', 
+		'apply_date' => '', 
+		'publish_date' => '', 
+		'register_date' => '', 
+		'scope' => '', 
+		'status' => '', 
 
     );
 
@@ -186,6 +218,14 @@ $app->match('/trademark/create', function () use ($app) {
 
 	$form = $form->add('name', 'text', array('required' => true));
 	$form = $form->add('logo', 'file', array('required' => true));
+	$form = $form->add('number', 'text', array('required' => true));
+	$form = $form->add('owner', 'text', array('required' => true));
+	$form = $form->add('category', 'text', array('required' => true));
+	$form = $form->add('apply_date', 'text', array('required' => true));
+	$form = $form->add('publish_date', 'text', array('required' => true));
+	$form = $form->add('register_date', 'text', array('required' => true));
+	$form = $form->add('scope', 'textarea', array('required' => false));
+	$form = $form->add('status', 'text', array('required' => true));
 
 
     $form = $form->getForm();
@@ -197,8 +237,8 @@ $app->match('/trademark/create', function () use ($app) {
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $update_query = "INSERT INTO `trademark` (`name`, `logo`) VALUES (?, ?)";
-            $app['db']->executeUpdate($update_query, array($data['name'], $data['logo']));            
+            $update_query = "INSERT INTO `trademark` (`name`, `logo`, `number`, `owner`, `category`, `apply_date`, `publish_date`, `register_date`, `scope`, `status`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $app['db']->executeUpdate($update_query, array($data['name'], $data['logo'], $data['number'], $data['owner'], $data['category'], $data['apply_date'], $data['publish_date'], $data['register_date'], $data['scope'], $data['status']));            
 
 
             $app['session']->getFlashBag()->add(
@@ -240,6 +280,14 @@ $app->match('/trademark/edit/{id}', function ($id) use ($app) {
     $initial_data = array(
 		'name' => $row_sql['name'], 
 		'logo' => $row_sql['logo'], 
+		'number' => $row_sql['number'], 
+		'owner' => $row_sql['owner'], 
+		'category' => $row_sql['category'], 
+		'apply_date' => $row_sql['apply_date'], 
+		'publish_date' => $row_sql['publish_date'], 
+		'register_date' => $row_sql['register_date'], 
+		'scope' => $row_sql['scope'], 
+		'status' => $row_sql['status'], 
 
     );
 
@@ -249,6 +297,14 @@ $app->match('/trademark/edit/{id}', function ($id) use ($app) {
 
 	$form = $form->add('name', 'text', array('required' => true));
 	$form = $form->add('logo', 'file', array('required' => true));
+	$form = $form->add('number', 'text', array('required' => true));
+	$form = $form->add('owner', 'text', array('required' => true));
+	$form = $form->add('category', 'text', array('required' => true));
+	$form = $form->add('apply_date', 'text', array('required' => true));
+	$form = $form->add('publish_date', 'text', array('required' => true));
+	$form = $form->add('register_date', 'text', array('required' => true));
+	$form = $form->add('scope', 'textarea', array('required' => false));
+	$form = $form->add('status', 'text', array('required' => true));
 
 
     $form = $form->getForm();
@@ -260,8 +316,8 @@ $app->match('/trademark/edit/{id}', function ($id) use ($app) {
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $update_query = "UPDATE `trademark` SET `name` = ?, `logo` = ? WHERE `id` = ?";
-            $app['db']->executeUpdate($update_query, array($data['name'], $data['logo'], $id));            
+            $update_query = "UPDATE `trademark` SET `name` = ?, `logo` = ?, `number` = ?, `owner` = ?, `category` = ?, `apply_date` = ?, `publish_date` = ?, `register_date` = ?, `scope` = ?, `status` = ? WHERE `id` = ?";
+            $app['db']->executeUpdate($update_query, array($data['name'], $data['logo'], $data['number'], $data['owner'], $data['category'], $data['apply_date'], $data['publish_date'], $data['register_date'], $data['scope'], $data['status'], $id));            
 
 
             $app['session']->getFlashBag()->add(
@@ -322,6 +378,14 @@ $app->match('/trademark/downloadList', function (Symfony\Component\HttpFoundatio
 		'id', 
 		'name', 
 		'logo', 
+		'number', 
+		'owner', 
+		'category', 
+		'apply_date', 
+		'publish_date', 
+		'register_date', 
+		'scope', 
+		'status', 
 
     );
     
@@ -329,6 +393,14 @@ $app->match('/trademark/downloadList', function (Symfony\Component\HttpFoundatio
 		'int(11)', 
 		'varchar(20)', 
 		'blob', 
+		'varchar(10)', 
+		'varchar(255)', 
+		'tinyint(4)', 
+		'date', 
+		'date', 
+		'date', 
+		'text', 
+		'varchar(63)', 
 
     );   
 
