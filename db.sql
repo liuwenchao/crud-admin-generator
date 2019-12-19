@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.17, for osx10.14 (x86_64)
 --
--- Host: 127.0.0.1    Database: qidian
+-- Host: localhost    Database: qidian
 -- ------------------------------------------------------
 -- Server version	8.0.17
 
@@ -212,7 +212,7 @@ CREATE TABLE `trademark` (
   `scope` text COLLATE utf8mb4_general_ci COMMENT '使用商品范围',
   `status` varchar(63) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '申请中' COMMENT '状态',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -221,7 +221,7 @@ CREATE TABLE `trademark` (
 
 LOCK TABLES `trademark` WRITE;
 /*!40000 ALTER TABLE `trademark` DISABLE KEYS */;
-INSERT INTO `trademark` VALUES (2,'笛木',_binary '/private/var/folders/2h/2sps6x4147v0j7bc_f_7p6kr0000gn/T/phpLrLIIy','45879876','杭州笛木生物科技有限公司',10,'2019-10-01','2019-11-01','2019-11-01','按摩器械,医疗器械和仪器,假牙套,理疗设备,医用冷敷贴,口罩,奶瓶,避孕套,假肢,矫形鞋,缝合材料','申请中');
+INSERT INTO `trademark` VALUES (2,'笛木',_binary '5dfb677cb74c4.jpeg,5dfb658d4755a.jpeg','45879876','杭州笛木生物科技有限公司',10,'2019-10-01','2019-11-01','2019-11-01','按摩器械,医疗器械和仪器,假牙套,理疗设备,医用冷敷贴,口罩,奶瓶,避孕套,假肢,矫形鞋,缝合材料','申请中'),(6,'悦昂',_binary '5dfb656be870b.jpeg','45879876','杭州悦昂生物科技有限公司',10,'2019-10-01','2019-11-01','2019-11-01',NULL,'申请中');
 /*!40000 ALTER TABLE `trademark` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -234,4 +234,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-19 18:37:52
+-- Dump completed on 2019-12-19 20:18:05
