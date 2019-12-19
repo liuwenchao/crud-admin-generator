@@ -160,8 +160,14 @@ __TABLECOLUMNS_INITIALDATA_EMPTY_ARRAY__
     $form = $app['form.factory']->createBuilder('form', $initial_data);
 
 __EXTERNALSFIELDS_FOR_FORM__
-
 __FIELDS_FOR_FORM__
+$table_columns = array(
+__TABLECOLUMNS_ARRAY__
+);
+
+$table_columns_type = array(
+__TABLECOLUMNS_TYPE_ARRAY__
+); 
 
     $form = $form->getForm();
 
@@ -171,6 +177,25 @@ __FIELDS_FOR_FORM__
 
         if ($form->isValid()) {
             $data = $form->getData();
+
+            foreach ($table_columns_type as $key => $value) {
+                if(in_array($value, array('blob'))){
+                    $column = $table_columns[$key];
+                    if ($file = $form[$column]->getData()) {
+                        $newFilename = uniqid().'.'.$file->guessExtension();
+                        // Move the file to resources directory
+                        try {
+                            $file->move(
+                                'resources/files/',
+                                $newFilename
+                            );
+                        } catch (FileException $e) {
+                            //TODO ... handle exception if something happens during file upload
+                        }
+                        $data[$column] = $newFilename;
+                    }
+                }
+            }
 
             $update_query = "INSERT INTO `__TABLENAME__` (__INSERT_QUERY_FIELDS__) VALUES (__INSERT_QUERY_VALUES__)";
             $app['db']->executeUpdate($update_query, array(__INSERT_EXECUTE_FIELDS__));            
@@ -221,6 +246,13 @@ __TABLECOLUMNS_INITIALDATA_ARRAY__
 
 __EXTERNALSFIELDS_FOR_FORM__
 __FIELDS_FOR_FORM__
+$table_columns = array(
+__TABLECOLUMNS_ARRAY__
+);
+
+$table_columns_type = array(
+__TABLECOLUMNS_TYPE_ARRAY__
+); 
 
     $form = $form->getForm();
 
@@ -230,6 +262,27 @@ __FIELDS_FOR_FORM__
 
         if ($form->isValid()) {
             $data = $form->getData();
+
+            foreach ($table_columns_type as $key => $value) {
+                if(in_array($value, array('blob'))){
+                    $column = $table_columns[$key];
+                    if ($file = $form[$column]->getData()) {
+                        $newFilename = uniqid().'.'.$file->guessExtension();
+                        // Move the file to resources directory
+                        try {
+                            $file->move(
+                                'resources/files/',
+                                $newFilename
+                            );
+                        } catch (FileException $e) {
+                            //TODO ... handle exception if something happens during file upload
+                        }
+                        $data[$column] = $newFilename . ',' . $row_sql[$column];
+                    } else {
+                        $data[$column] = $row_sql[$column];
+                    }
+                }
+            }
 
             $update_query = "UPDATE `__TABLENAME__` SET __UPDATE_QUERY_FIELDS__ WHERE `__TABLE_PRIMARYKEY__` = ?";
             $app['db']->executeUpdate($update_query, array(__UPDATE_EXECUTE_FIELDS__, $id));            

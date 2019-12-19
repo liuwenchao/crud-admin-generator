@@ -262,7 +262,7 @@ $console
 						}
 						else if(strpos($table_column['type'], 'blob') !== false){
 							$FIELDS_FOR_FORM .= "" .
-							"\t" . "\$form = \$form->add('" . $table_column['name'] . "', 'file', array('required' => " . $field_nullable . "));" . "\n";
+							"\t" . "\$form = \$form->add('" . $table_column['name'] . "', 'file', array('required' => " . $field_nullable . ", 'data_class' => null));" . "\n";
 						}
 						else{
 							$FIELDS_FOR_FORM .= "" .
@@ -278,16 +278,26 @@ $console
 
 			if($count_externals > 0){
 				$EXTERNALS_FOR_LIST .= "" .
-				"\t\t\t" . "else{" . "\n" .
+				"\t\t\t" . "else if( \$table_columns_type[\$i] != \"blob\") {" . "\n" .
 				"\t\t\t" . "    \$rows[\$row_key][\$table_columns[\$i]] = \$row_sql[\$table_columns[\$i]];" . "\n" .
-				"\t\t\t" . "}" . "\n";
+				"\t\t\t" . "} else {" . "\n" .
+				"\t\t\t\t" . 	"if( !\$row_sql[\$table_columns[\$i]] ) {" . "\n" .
+				"\t\t\t\t\t" . 		"\$rows[\$row_key][\$table_columns[\$i]] = \"\";" . "\n" .
+				"\t\t\t\t" . 	"} else {" . "\n" .
+				"\t\t\t\t\t" . 		"foreach (explode(',',\$row_sql[\$table_columns[\$i]]) as \$img) {" . "\n" .
+				"\t\t\t\t\t\t" . 		"\$image_url = \"/resources/files/\" . \$img;" . "\n" .
+				"\t\t\t\t\t\t" . 		"\$rows[\$row_key][\$table_columns[\$i]] .= \" <a target='__blank' href='\$image_url'><img style='width:40px;' src='\$image_url'/></a>\";" . "\n" .
+				"\t\t\t\t\t" . 		"}" . "\n" .
+				"\t\t\t\t" . 	"}" . "\n" .
+				"\t\t\t" . "}" . "\n"
+				;
 			}
 
 			if($EXTERNALS_FOR_LIST == ""){
 				$EXTERNALS_FOR_LIST .= "" . 
 				"\t\t" . "if( \$table_columns_type[\$i] != \"blob\") {" . "\n" .
 				"\t\t\t\t" . "\$rows[\$row_key][\$table_columns[\$i]] = \$row_sql[\$table_columns[\$i]];" . "\n" . 
-				"\t\t" . "} else {" .
+				"\t\t" . "} else {" . "\n" .
 				
 				"\t\t\t\t" . "if( !\$row_sql[\$table_columns[\$i]] ) {" . "\n" .
 				"\t\t\t\t\t\t" . "\$rows[\$row_key][\$table_columns[\$i]] = \"0 Kb.\";" . "\n" .
