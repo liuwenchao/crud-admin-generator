@@ -185,6 +185,22 @@ $console
 						"\t\t\t\t\t\t\t\t\t" . "    {{ form_widget(form." . $table_column['name'] . ", { attr: { 'class': 'form-control textarea', 'style': 'width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;' }}) }}" . "\n" .
 						"\t\t\t\t\t\t\t\t\t" . "</div>" . "\n\n";
 					}
+					else if(strpos($table_column['type'], 'blob') !== false){
+						$EDIT_FORM_TEMPLATE .= "" .
+						"\t\t\t\t\t\t\t\t\t" . "<div class='form-group'>" . "\n" .
+						"\t\t\t\t\t\t\t\t\t" . "    {{ form_label(form." . $table_column['name'] . ") }}" . "\n" .
+						"\t\t\t\t\t\t\t\t\t" . "    {{ form_widget(form." . $table_column['name'] . ", { attr: { 'class': 'form-control' }}) }}" . "\n" .
+						"\t\t\t\t\t\t\t\t\t" . "    {% if form.vars.value.".$table_column['name']."|length > 0 %}". "\n" .
+						"\t\t\t\t\t\t\t\t\t" . "    <div>". "\n" .
+						"\t\t\t\t\t\t\t\t\t" . "    	{% for img in form.vars.value.".$table_column['name']."|split(',') %}". "\n" .
+						"\t\t\t\t\t\t\t\t\t" . "    	<a target='__blank' href='/resources/files/{{img}}'>". "\n" .
+						"\t\t\t\t\t\t\t\t\t" . "    		<img style='width:400px;' class='img-responsive' src='/resources/files/{{img}}'/>". "\n" .
+						"\t\t\t\t\t\t\t\t\t" . "    	</a>". "\n" .
+						"\t\t\t\t\t\t\t\t\t" . "    	{% endfor %}". "\n" .
+						"\t\t\t\t\t\t\t\t\t" . "    </div>". "\n" .
+						"\t\t\t\t\t\t\t\t\t" . "    {% endif %}". "\n" .
+						"\t\t\t\t\t\t\t\t\t" . "</div>" . "\n\n";
+					}
 					else {
 						$EDIT_FORM_TEMPLATE .= "" .
 						"\t\t\t\t\t\t\t\t\t" . "<div class='form-group'>" . "\n" .
