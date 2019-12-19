@@ -300,10 +300,12 @@ $console
 				"\t\t\t\t" . 	"if( !\$row_sql[\$table_columns[\$i]] ) {" . "\n" .
 				"\t\t\t\t\t" . 		"\$rows[\$row_key][\$table_columns[\$i]] = \"\";" . "\n" .
 				"\t\t\t\t" . 	"} else {" . "\n" .
+
 				"\t\t\t\t\t" . 		"foreach (explode(',',\$row_sql[\$table_columns[\$i]]) as \$img) {" . "\n" .
 				"\t\t\t\t\t\t" . 		"\$image_url = \"/resources/files/\" . \$img;" . "\n" .
 				"\t\t\t\t\t\t" . 		"\$rows[\$row_key][\$table_columns[\$i]] .= \" <a target='__blank' href='\$image_url'><img style='width:40px;' src='\$image_url'/></a>\";" . "\n" .
 				"\t\t\t\t\t" . 		"}" . "\n" .
+
 				"\t\t\t\t" . 	"}" . "\n" .
 				"\t\t\t" . "}" . "\n"
 				;
@@ -319,13 +321,11 @@ $console
 				"\t\t\t\t\t\t" . "\$rows[\$row_key][\$table_columns[\$i]] = \"0 Kb.\";" . "\n" .
 				"\t\t\t\t" . "} else {" . "\n" .
 				   
-				"\t\t\t\t\t\t" . "\$rows[\$row_key][\$table_columns[\$i]] = \" <a target='__blank' href='menu/download?id=\" . \$row_sql[\$table_columns[0]];" . "\n" .
-				"\t\t\t\t\t\t" . "\$rows[\$row_key][\$table_columns[\$i]] .= \"&fldname=\" . \$table_columns[\$i];" . "\n" . 
-				"\t\t\t\t\t\t" . "\$rows[\$row_key][\$table_columns[\$i]] .= \"&idfld=\" . \$table_columns[0];" . "\n" .
-				"\t\t\t\t\t\t" . "\$rows[\$row_key][\$table_columns[\$i]] .= \"'>\";" . "\n" .
-				"\t\t\t\t\t\t" . "\$rows[\$row_key][\$table_columns[\$i]] .= number_format(strlen(\$row_sql[\$table_columns[\$i]]) / 1024, 2) . \" Kb.\";" . "\n" .
-				"\t\t\t\t\t\t" . "\$rows[\$row_key][\$table_columns[\$i]] .= \"</a>\";" . "\n" .
-				    
+				"\t\t\t\t\t" . 		"foreach (explode(',',\$row_sql[\$table_columns[\$i]]) as \$img) {" . "\n" .
+				"\t\t\t\t\t\t" . 		"\$image_url = \"/resources/files/\" . \$img;" . "\n" .
+				"\t\t\t\t\t\t" . 		"\$rows[\$row_key][\$table_columns[\$i]] .= \" <a target='__blank' href='\$image_url'><img style='width:40px;' src='\$image_url'/></a>\";" . "\n" .
+				"\t\t\t\t\t" . 		"}" . "\n" .
+
 				"\t\t\t\t" . "}" . "\n" .
 				
 				"\t\t" . "}";
