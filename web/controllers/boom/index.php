@@ -91,8 +91,17 @@ $app->match('/boom/list', function (Symfony\Component\HttpFoundation\Request $re
 			    $findexternal_row = $app['db']->fetchAssoc($findexternal_sql, array($row_sql[$table_columns[$i]]));
 			    $rows[$row_key][$table_columns[$i]] = $findexternal_row['id'];
 			}
-			else{
+			else if( $table_columns_type[$i] != "blob") {
 			    $rows[$row_key][$table_columns[$i]] = $row_sql[$table_columns[$i]];
+			} else {
+				if( !$row_sql[$table_columns[$i]] ) {
+					$rows[$row_key][$table_columns[$i]] = "";
+				} else {
+					foreach (explode(',',$row_sql[$table_columns[$i]]) as $img) {
+						$image_url = "/resources/files/" . $img;
+						$rows[$row_key][$table_columns[$i]] .= " <a target='__blank' href='$image_url'><img style='width:40px;' src='$image_url'/></a>";
+					}
+				}
 			}
 
 
@@ -201,10 +210,24 @@ $app->match('/boom/create', function () use ($app) {
 	}
 
 
-
 	$form = $form->add('name', 'text', array('required' => true));
 	$form = $form->add('code', 'text', array('required' => true));
 
+$table_columns = array(
+		'id', 
+		'name', 
+		'code', 
+		'product_id', 
+
+);
+
+$table_columns_type = array(
+		'int(11)', 
+		'varchar(8)', 
+		'char(12)', 
+		'int(11)', 
+
+); 
 
     $form = $form->getForm();
 
@@ -214,6 +237,25 @@ $app->match('/boom/create', function () use ($app) {
 
         if ($form->isValid()) {
             $data = $form->getData();
+
+            foreach ($table_columns_type as $key => $value) {
+                if(in_array($value, array('blob'))){
+                    $column = $table_columns[$key];
+                    if ($file = $form[$column]->getData()) {
+                        $newFilename = uniqid().'.'.$file->guessExtension();
+                        // Move the file to resources directory
+                        try {
+                            $file->move(
+                                'resources/files/',
+                                $newFilename
+                            );
+                        } catch (FileException $e) {
+                            //TODO ... handle exception if something happens during file upload
+                        }
+                        $data[$column] = $newFilename;
+                    }
+                }
+            }
 
             $update_query = "INSERT INTO `boom` (`name`, `code`, `product_id`) VALUES (?, ?, ?)";
             $app['db']->executeUpdate($update_query, array($data['name'], $data['code'], $data['product_id']));            
@@ -287,6 +329,21 @@ $app->match('/boom/edit/{id}', function ($id) use ($app) {
 	$form = $form->add('name', 'text', array('required' => true));
 	$form = $form->add('code', 'text', array('required' => true));
 
+$table_columns = array(
+		'id', 
+		'name', 
+		'code', 
+		'product_id', 
+
+);
+
+$table_columns_type = array(
+		'int(11)', 
+		'varchar(8)', 
+		'char(12)', 
+		'int(11)', 
+
+); 
 
     $form = $form->getForm();
 
@@ -296,6 +353,27 @@ $app->match('/boom/edit/{id}', function ($id) use ($app) {
 
         if ($form->isValid()) {
             $data = $form->getData();
+
+            foreach ($table_columns_type as $key => $value) {
+                if(in_array($value, array('blob'))){
+                    $column = $table_columns[$key];
+                    if ($file = $form[$column]->getData()) {
+                        $newFilename = uniqid().'.'.$file->guessExtension();
+                        // Move the file to resources directory
+                        try {
+                            $file->move(
+                                'resources/files/',
+                                $newFilename
+                            );
+                        } catch (FileException $e) {
+                            //TODO ... handle exception if something happens during file upload
+                        }
+                        $data[$column] = $newFilename . ',' . $row_sql[$column];
+                    } else {
+                        $data[$column] = $row_sql[$column];
+                    }
+                }
+            }
 
             $update_query = "UPDATE `boom` SET `name` = ?, `code` = ?, `product_id` = ? WHERE `id` = ?";
             $app['db']->executeUpdate($update_query, array($data['name'], $data['code'], $data['product_id'], $id));            

@@ -84,15 +84,14 @@ $app->match('/brand/list', function (Symfony\Component\HttpFoundation\Request $r
 
 		if( $table_columns_type[$i] != "blob") {
 				$rows[$row_key][$table_columns[$i]] = $row_sql[$table_columns[$i]];
-		} else {				if( !$row_sql[$table_columns[$i]] ) {
+		} else {
+				if( !$row_sql[$table_columns[$i]] ) {
 						$rows[$row_key][$table_columns[$i]] = "0 Kb.";
 				} else {
-						$rows[$row_key][$table_columns[$i]] = " <a target='__blank' href='menu/download?id=" . $row_sql[$table_columns[0]];
-						$rows[$row_key][$table_columns[$i]] .= "&fldname=" . $table_columns[$i];
-						$rows[$row_key][$table_columns[$i]] .= "&idfld=" . $table_columns[0];
-						$rows[$row_key][$table_columns[$i]] .= "'>";
-						$rows[$row_key][$table_columns[$i]] .= number_format(strlen($row_sql[$table_columns[$i]]) / 1024, 2) . " Kb.";
-						$rows[$row_key][$table_columns[$i]] .= "</a>";
+					foreach (explode(',',$row_sql[$table_columns[$i]]) as $img) {
+						$image_url = "/resources/files/" . $img;
+						$rows[$row_key][$table_columns[$i]] .= " <a target='__blank' href='$image_url'><img style='width:40px;' src='$image_url'/></a>";
+					}
 				}
 		}
 
@@ -179,9 +178,19 @@ $app->match('/brand/create', function () use ($app) {
     $form = $app['form.factory']->createBuilder('form', $initial_data);
 
 
-
 	$form = $form->add('name', 'text', array('required' => false));
 
+$table_columns = array(
+		'id', 
+		'name', 
+
+);
+
+$table_columns_type = array(
+		'int(11)', 
+		'varchar(8)', 
+
+); 
 
     $form = $form->getForm();
 
@@ -191,6 +200,25 @@ $app->match('/brand/create', function () use ($app) {
 
         if ($form->isValid()) {
             $data = $form->getData();
+
+            foreach ($table_columns_type as $key => $value) {
+                if(in_array($value, array('blob'))){
+                    $column = $table_columns[$key];
+                    if ($file = $form[$column]->getData()) {
+                        $newFilename = uniqid().'.'.$file->guessExtension();
+                        // Move the file to resources directory
+                        try {
+                            $file->move(
+                                'resources/files/',
+                                $newFilename
+                            );
+                        } catch (FileException $e) {
+                            //TODO ... handle exception if something happens during file upload
+                        }
+                        $data[$column] = $newFilename;
+                    }
+                }
+            }
 
             $update_query = "INSERT INTO `brand` (`name`) VALUES (?)";
             $app['db']->executeUpdate($update_query, array($data['name']));            
@@ -243,6 +271,17 @@ $app->match('/brand/edit/{id}', function ($id) use ($app) {
 
 	$form = $form->add('name', 'text', array('required' => false));
 
+$table_columns = array(
+		'id', 
+		'name', 
+
+);
+
+$table_columns_type = array(
+		'int(11)', 
+		'varchar(8)', 
+
+); 
 
     $form = $form->getForm();
 
@@ -252,6 +291,27 @@ $app->match('/brand/edit/{id}', function ($id) use ($app) {
 
         if ($form->isValid()) {
             $data = $form->getData();
+
+            foreach ($table_columns_type as $key => $value) {
+                if(in_array($value, array('blob'))){
+                    $column = $table_columns[$key];
+                    if ($file = $form[$column]->getData()) {
+                        $newFilename = uniqid().'.'.$file->guessExtension();
+                        // Move the file to resources directory
+                        try {
+                            $file->move(
+                                'resources/files/',
+                                $newFilename
+                            );
+                        } catch (FileException $e) {
+                            //TODO ... handle exception if something happens during file upload
+                        }
+                        $data[$column] = $newFilename . ',' . $row_sql[$column];
+                    } else {
+                        $data[$column] = $row_sql[$column];
+                    }
+                }
+            }
 
             $update_query = "UPDATE `brand` SET `name` = ? WHERE `id` = ?";
             $app['db']->executeUpdate($update_query, array($data['name'], $id));            

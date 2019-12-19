@@ -102,15 +102,14 @@ $app->match('/trademark/list', function (Symfony\Component\HttpFoundation\Reques
 
 		if( $table_columns_type[$i] != "blob") {
 				$rows[$row_key][$table_columns[$i]] = $row_sql[$table_columns[$i]];
-		} else {				if( !$row_sql[$table_columns[$i]] ) {
+		} else {
+				if( !$row_sql[$table_columns[$i]] ) {
 						$rows[$row_key][$table_columns[$i]] = "0 Kb.";
 				} else {
-						$rows[$row_key][$table_columns[$i]] = " <a target='__blank' href='menu/download?id=" . $row_sql[$table_columns[0]];
-						$rows[$row_key][$table_columns[$i]] .= "&fldname=" . $table_columns[$i];
-						$rows[$row_key][$table_columns[$i]] .= "&idfld=" . $table_columns[0];
-						$rows[$row_key][$table_columns[$i]] .= "'>";
-						$rows[$row_key][$table_columns[$i]] .= number_format(strlen($row_sql[$table_columns[$i]]) / 1024, 2) . " Kb.";
-						$rows[$row_key][$table_columns[$i]] .= "</a>";
+					foreach (explode(',',$row_sql[$table_columns[$i]]) as $img) {
+						$image_url = "/resources/files/" . $img;
+						$rows[$row_key][$table_columns[$i]] .= " <a target='__blank' href='$image_url'><img style='width:40px;' src='$image_url'/></a>";
+					}
 				}
 		}
 
@@ -215,9 +214,8 @@ $app->match('/trademark/create', function () use ($app) {
     $form = $app['form.factory']->createBuilder('form', $initial_data);
 
 
-
 	$form = $form->add('name', 'text', array('required' => true));
-	$form = $form->add('logo', 'file', array('required' => true));
+	$form = $form->add('logo', 'file', array('required' => true, 'data_class' => null));
 	$form = $form->add('number', 'text', array('required' => true));
 	$form = $form->add('owner', 'text', array('required' => true));
 	$form = $form->add('category', 'text', array('required' => true));
@@ -227,6 +225,35 @@ $app->match('/trademark/create', function () use ($app) {
 	$form = $form->add('scope', 'textarea', array('required' => false));
 	$form = $form->add('status', 'text', array('required' => true));
 
+$table_columns = array(
+		'id', 
+		'name', 
+		'logo', 
+		'number', 
+		'owner', 
+		'category', 
+		'apply_date', 
+		'publish_date', 
+		'register_date', 
+		'scope', 
+		'status', 
+
+);
+
+$table_columns_type = array(
+		'int(11)', 
+		'varchar(20)', 
+		'blob', 
+		'varchar(10)', 
+		'varchar(255)', 
+		'tinyint(4)', 
+		'date', 
+		'date', 
+		'date', 
+		'text', 
+		'varchar(63)', 
+
+); 
 
     $form = $form->getForm();
 
@@ -236,6 +263,25 @@ $app->match('/trademark/create', function () use ($app) {
 
         if ($form->isValid()) {
             $data = $form->getData();
+
+            foreach ($table_columns_type as $key => $value) {
+                if(in_array($value, array('blob'))){
+                    $column = $table_columns[$key];
+                    if ($file = $form[$column]->getData()) {
+                        $newFilename = uniqid().'.'.$file->guessExtension();
+                        // Move the file to resources directory
+                        try {
+                            $file->move(
+                                'resources/files/',
+                                $newFilename
+                            );
+                        } catch (FileException $e) {
+                            //TODO ... handle exception if something happens during file upload
+                        }
+                        $data[$column] = $newFilename;
+                    }
+                }
+            }
 
             $update_query = "INSERT INTO `trademark` (`name`, `logo`, `number`, `owner`, `category`, `apply_date`, `publish_date`, `register_date`, `scope`, `status`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $app['db']->executeUpdate($update_query, array($data['name'], $data['logo'], $data['number'], $data['owner'], $data['category'], $data['apply_date'], $data['publish_date'], $data['register_date'], $data['scope'], $data['status']));            
@@ -296,7 +342,7 @@ $app->match('/trademark/edit/{id}', function ($id) use ($app) {
 
 
 	$form = $form->add('name', 'text', array('required' => true));
-	$form = $form->add('logo', 'file', array('required' => true));
+	$form = $form->add('logo', 'file', array('required' => true, 'data_class' => null));
 	$form = $form->add('number', 'text', array('required' => true));
 	$form = $form->add('owner', 'text', array('required' => true));
 	$form = $form->add('category', 'text', array('required' => true));
@@ -306,6 +352,35 @@ $app->match('/trademark/edit/{id}', function ($id) use ($app) {
 	$form = $form->add('scope', 'textarea', array('required' => false));
 	$form = $form->add('status', 'text', array('required' => true));
 
+$table_columns = array(
+		'id', 
+		'name', 
+		'logo', 
+		'number', 
+		'owner', 
+		'category', 
+		'apply_date', 
+		'publish_date', 
+		'register_date', 
+		'scope', 
+		'status', 
+
+);
+
+$table_columns_type = array(
+		'int(11)', 
+		'varchar(20)', 
+		'blob', 
+		'varchar(10)', 
+		'varchar(255)', 
+		'tinyint(4)', 
+		'date', 
+		'date', 
+		'date', 
+		'text', 
+		'varchar(63)', 
+
+); 
 
     $form = $form->getForm();
 
@@ -315,6 +390,27 @@ $app->match('/trademark/edit/{id}', function ($id) use ($app) {
 
         if ($form->isValid()) {
             $data = $form->getData();
+
+            foreach ($table_columns_type as $key => $value) {
+                if(in_array($value, array('blob'))){
+                    $column = $table_columns[$key];
+                    if ($file = $form[$column]->getData()) {
+                        $newFilename = uniqid().'.'.$file->guessExtension();
+                        // Move the file to resources directory
+                        try {
+                            $file->move(
+                                'resources/files/',
+                                $newFilename
+                            );
+                        } catch (FileException $e) {
+                            //TODO ... handle exception if something happens during file upload
+                        }
+                        $data[$column] = $newFilename . ',' . $row_sql[$column];
+                    } else {
+                        $data[$column] = $row_sql[$column];
+                    }
+                }
+            }
 
             $update_query = "UPDATE `trademark` SET `name` = ?, `logo` = ?, `number` = ?, `owner` = ?, `category` = ?, `apply_date` = ?, `publish_date` = ?, `register_date` = ?, `scope` = ?, `status` = ? WHERE `id` = ?";
             $app['db']->executeUpdate($update_query, array($data['name'], $data['logo'], $data['number'], $data['owner'], $data['category'], $data['apply_date'], $data['publish_date'], $data['register_date'], $data['scope'], $data['status'], $id));            

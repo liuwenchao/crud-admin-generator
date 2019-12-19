@@ -88,15 +88,14 @@ $app->match('/category/list', function (Symfony\Component\HttpFoundation\Request
 
 		if( $table_columns_type[$i] != "blob") {
 				$rows[$row_key][$table_columns[$i]] = $row_sql[$table_columns[$i]];
-		} else {				if( !$row_sql[$table_columns[$i]] ) {
+		} else {
+				if( !$row_sql[$table_columns[$i]] ) {
 						$rows[$row_key][$table_columns[$i]] = "0 Kb.";
 				} else {
-						$rows[$row_key][$table_columns[$i]] = " <a target='__blank' href='menu/download?id=" . $row_sql[$table_columns[0]];
-						$rows[$row_key][$table_columns[$i]] .= "&fldname=" . $table_columns[$i];
-						$rows[$row_key][$table_columns[$i]] .= "&idfld=" . $table_columns[0];
-						$rows[$row_key][$table_columns[$i]] .= "'>";
-						$rows[$row_key][$table_columns[$i]] .= number_format(strlen($row_sql[$table_columns[$i]]) / 1024, 2) . " Kb.";
-						$rows[$row_key][$table_columns[$i]] .= "</a>";
+					foreach (explode(',',$row_sql[$table_columns[$i]]) as $img) {
+						$image_url = "/resources/files/" . $img;
+						$rows[$row_key][$table_columns[$i]] .= " <a target='__blank' href='$image_url'><img style='width:40px;' src='$image_url'/></a>";
+					}
 				}
 		}
 
@@ -188,12 +187,26 @@ $app->match('/category/create', function () use ($app) {
     $form = $app['form.factory']->createBuilder('form', $initial_data);
 
 
-
 	$form = $form->add('id', 'text', array('required' => true));
 	$form = $form->add('name', 'text', array('required' => true));
 	$form = $form->add('gmt_create', 'text', array('required' => true));
 	$form = $form->add('gmt_modified', 'text', array('required' => true));
 
+$table_columns = array(
+		'id', 
+		'name', 
+		'gmt_create', 
+		'gmt_modified', 
+
+);
+
+$table_columns_type = array(
+		'char(1)', 
+		'char(8)', 
+		'timestamp', 
+		'timestamp', 
+
+); 
 
     $form = $form->getForm();
 
@@ -203,6 +216,25 @@ $app->match('/category/create', function () use ($app) {
 
         if ($form->isValid()) {
             $data = $form->getData();
+
+            foreach ($table_columns_type as $key => $value) {
+                if(in_array($value, array('blob'))){
+                    $column = $table_columns[$key];
+                    if ($file = $form[$column]->getData()) {
+                        $newFilename = uniqid().'.'.$file->guessExtension();
+                        // Move the file to resources directory
+                        try {
+                            $file->move(
+                                'resources/files/',
+                                $newFilename
+                            );
+                        } catch (FileException $e) {
+                            //TODO ... handle exception if something happens during file upload
+                        }
+                        $data[$column] = $newFilename;
+                    }
+                }
+            }
 
             $update_query = "INSERT INTO `category` (`id`, `name`, `gmt_create`, `gmt_modified`) VALUES (?, ?, ?, ?)";
             $app['db']->executeUpdate($update_query, array($data['id'], $data['name'], $data['gmt_create'], $data['gmt_modified']));            
@@ -261,6 +293,21 @@ $app->match('/category/edit/{id}', function ($id) use ($app) {
 	$form = $form->add('gmt_create', 'text', array('required' => true));
 	$form = $form->add('gmt_modified', 'text', array('required' => true));
 
+$table_columns = array(
+		'id', 
+		'name', 
+		'gmt_create', 
+		'gmt_modified', 
+
+);
+
+$table_columns_type = array(
+		'char(1)', 
+		'char(8)', 
+		'timestamp', 
+		'timestamp', 
+
+); 
 
     $form = $form->getForm();
 
@@ -270,6 +317,27 @@ $app->match('/category/edit/{id}', function ($id) use ($app) {
 
         if ($form->isValid()) {
             $data = $form->getData();
+
+            foreach ($table_columns_type as $key => $value) {
+                if(in_array($value, array('blob'))){
+                    $column = $table_columns[$key];
+                    if ($file = $form[$column]->getData()) {
+                        $newFilename = uniqid().'.'.$file->guessExtension();
+                        // Move the file to resources directory
+                        try {
+                            $file->move(
+                                'resources/files/',
+                                $newFilename
+                            );
+                        } catch (FileException $e) {
+                            //TODO ... handle exception if something happens during file upload
+                        }
+                        $data[$column] = $newFilename . ',' . $row_sql[$column];
+                    } else {
+                        $data[$column] = $row_sql[$column];
+                    }
+                }
+            }
 
             $update_query = "UPDATE `category` SET `id` = ?, `name` = ?, `gmt_create` = ?, `gmt_modified` = ? WHERE `id` = ?";
             $app['db']->executeUpdate($update_query, array($data['id'], $data['name'], $data['gmt_create'], $data['gmt_modified'], $id));            
