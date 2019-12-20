@@ -40,7 +40,7 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
 			'db' => array(
 				'driver'   => 'pdo_mysql',
 				'dbname'   => 'qidian',
-				'host'     => '127.0.0.1',
+				'host'     => 'db',
 				'user'     => 'qidian',
 				'password' => 'qidian',
 				'charset'  => 'utf8',
