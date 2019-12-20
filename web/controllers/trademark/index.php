@@ -36,7 +36,7 @@ $app->match('/trademark/list', function (Symfony\Component\HttpFoundation\Reques
        
     $rows = array();
     
-    $searchValue = $search['value'];
+    $searchValue = str_replace("'","",$search['value']);
     $orderValue = $order[0];
     
     $orderClause = "";

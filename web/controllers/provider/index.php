@@ -36,7 +36,7 @@ $app->match('/provider/list', function (Symfony\Component\HttpFoundation\Request
        
     $rows = array();
     
-    $searchValue = $search['value'];
+    $searchValue = str_replace("'","",$search['value']);
     $orderValue = $order[0];
     
     $orderClause = "";
