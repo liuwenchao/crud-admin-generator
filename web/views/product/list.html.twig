@@ -50,7 +50,7 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
-                    产品库列表
+                    Product list
                 </h1>
             </section>
 
@@ -68,7 +68,7 @@
                             </div><!-- /.box-header -->
 
                             <div class="box-body table-responsive">
-                                <a class="btn btn-primary" href="{{ path('product_create') }}">录入新产品</a>
+                                <a class="btn btn-primary" href="{{ path('product_create') }}">Create new product</a>
 <!--
 <a class="btn btn-primary" href="{{ path('product_downloadList') }}">Download list of product as PDF</a>
 -->
@@ -76,18 +76,18 @@
                                 <table id="product_list" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            {% for table_column in table_columns %}
-                                            <th>{{ table_column }}</th>
+                                            {% for table_column in table_label_columns %}
+                                            <th class="text-nowrap">{{ table_column }}</th>
                                             {% endfor %}
-                                            <th>操作</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            {% for table_column in table_columns %}
+                                            {% for table_column in table_label_columns %}
                                             <th>{{ table_column }}</th>
                                             {% endfor %}
-                                            <th>操作</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </tfoot>
                                 </table>

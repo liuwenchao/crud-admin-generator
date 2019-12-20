@@ -65,6 +65,15 @@
 									<div class='form-group'>
 									    {{ form_label(form.bottle) }}
 									    {{ form_widget(form.bottle, { attr: { 'class': 'form-control' }}) }}
+									    {% if form.vars.value.bottle|length > 0 %}
+									    <div>
+									    	{% for img in form.vars.value.bottle|split(',') %}
+									    	<a target='__blank' href='/resources/files/{{img}}'>
+									    		<img style='width:400px;' class='img-responsive' src='/resources/files/{{img}}'/>
+									    	</a>
+									    	{% endfor %}
+									    </div>
+									    {% endif %}
 									</div>
 
 									<div class='form-group'>

@@ -76,15 +76,15 @@
                                 <table id="boom_list" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            {% for table_column in table_columns %}
-                                            <th>{{ table_column }}</th>
+                                            {% for table_column in table_label_columns %}
+                                            <th class="text-nowrap">{{ table_column }}</th>
                                             {% endfor %}
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            {% for table_column in table_columns %}
+                                            {% for table_column in table_label_columns %}
                                             <th>{{ table_column }}</th>
                                             {% endfor %}
                                             <th>Actions</th>

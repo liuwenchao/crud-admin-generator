@@ -168,10 +168,19 @@ $app->match('/boom', function () use ($app) {
 
     );
 
+    $table_label_columns = array(
+		'id', 
+		'名字', 
+		'编码', 
+		'产品', 
+
+    );
+
     $primary_key = "id";	
 
     return $app['twig']->render('boom/list.html.twig', array(
     	"table_columns" => $table_columns,
+    	"table_label_columns" => $table_label_columns,
         "primary_key" => $primary_key
     ));
         
@@ -200,18 +209,19 @@ $app->match('/boom/create', function () use ($app) {
 	if(count($options) > 0){
 	    $form = $form->add('product_id', 'choice', array(
 	        'required' => true,
+	        'label'    => '产品',
 	        'choices' => $options,
 	        'expanded' => false,
 	        'constraints' => new Assert\Choice(array_keys($options))
 	    ));
 	}
 	else{
-	    $form = $form->add('product_id', 'text', array('required' => true));
+	    $form = $form->add('product_id', 'text', array('required' => true, 'label' => '产品'));
 	}
 
 
-	$form = $form->add('name', 'text', array('required' => true));
-	$form = $form->add('code', 'text', array('required' => true));
+	$form = $form->add('name', 'text', array('required' => true, 'label' => '名字'));
+	$form = $form->add('code', 'text', array('required' => true, 'label' => '编码'));
 
 $table_columns = array(
 		'id', 
@@ -316,18 +326,19 @@ $app->match('/boom/edit/{id}', function ($id) use ($app) {
 	if(count($options) > 0){
 	    $form = $form->add('product_id', 'choice', array(
 	        'required' => true,
+	        'label'    => '产品',
 	        'choices' => $options,
 	        'expanded' => false,
 	        'constraints' => new Assert\Choice(array_keys($options))
 	    ));
 	}
 	else{
-	    $form = $form->add('product_id', 'text', array('required' => true));
+	    $form = $form->add('product_id', 'text', array('required' => true, 'label' => '产品'));
 	}
 
 
-	$form = $form->add('name', 'text', array('required' => true));
-	$form = $form->add('code', 'text', array('required' => true));
+	$form = $form->add('name', 'text', array('required' => true, 'label' => '名字'));
+	$form = $form->add('code', 'text', array('required' => true, 'label' => '编码'));
 
 $table_columns = array(
 		'id', 

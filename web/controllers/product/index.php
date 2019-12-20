@@ -142,8 +142,8 @@ $app->match('/product/list', function (Symfony\Component\HttpFoundation\Request 
 			    $rows[$row_key][$table_columns[$i]] = $findexternal_row['name'];
 			}
 			else if( $table_columns_type[$i] != "blob") {
-				$rows[$row_key][$table_columns[$i]] = $row_sql[$table_columns[$i]];
-			} else {                                
+			    $rows[$row_key][$table_columns[$i]] = $row_sql[$table_columns[$i]];
+			} else {
 				if( !$row_sql[$table_columns[$i]] ) {
 					$rows[$row_key][$table_columns[$i]] = "";
 				} else {
@@ -233,10 +233,34 @@ $app->match('/product', function () use ($app) {
 
     );
 
+    $table_label_columns = array(
+		'id', 
+		'供应商', 
+		'供应品类', 
+		'主规格数量', 
+		'主规格单位', 
+		'二级规格', 
+		'包材代码', 
+		'瓶器图片', 
+		'材质', 
+		'起订量', 
+		'税前价格', 
+		'含税含运价格', 
+		'开模周期', 
+		'打样周期', 
+		'付款方式', 
+		'供货周期', 
+		'备注', 
+		'品牌', 
+		'成品编码', 
+
+    );
+
     $primary_key = "id";	
 
     return $app['twig']->render('product/list.html.twig', array(
     	"table_columns" => $table_columns,
+    	"table_label_columns" => $table_label_columns,
         "primary_key" => $primary_key
     ));
         
@@ -280,13 +304,14 @@ $app->match('/product/create', function () use ($app) {
 	if(count($options) > 0){
 	    $form = $form->add('provider_id', 'choice', array(
 	        'required' => true,
+	        'label'    => '供应商',
 	        'choices' => $options,
 	        'expanded' => false,
 	        'constraints' => new Assert\Choice(array_keys($options))
 	    ));
 	}
 	else{
-	    $form = $form->add('provider_id', 'text', array('required' => true));
+	    $form = $form->add('provider_id', 'text', array('required' => true, 'label' => '供应商'));
 	}
 
 	$options = array();
@@ -298,13 +323,14 @@ $app->match('/product/create', function () use ($app) {
 	if(count($options) > 0){
 	    $form = $form->add('category_id', 'choice', array(
 	        'required' => true,
+	        'label'    => '供应品类',
 	        'choices' => $options,
 	        'expanded' => false,
 	        'constraints' => new Assert\Choice(array_keys($options))
 	    ));
 	}
 	else{
-	    $form = $form->add('category_id', 'text', array('required' => true));
+	    $form = $form->add('category_id', 'text', array('required' => true, 'label' => '供应品类'));
 	}
 
 	$options = array();
@@ -316,13 +342,14 @@ $app->match('/product/create', function () use ($app) {
 	if(count($options) > 0){
 	    $form = $form->add('material_id', 'choice', array(
 	        'required' => true,
+	        'label'    => '材质',
 	        'choices' => $options,
 	        'expanded' => false,
 	        'constraints' => new Assert\Choice(array_keys($options))
 	    ));
 	}
 	else{
-	    $form = $form->add('material_id', 'text', array('required' => true));
+	    $form = $form->add('material_id', 'text', array('required' => true, 'label' => '材质'));
 	}
 
 	$options = array();
@@ -334,30 +361,77 @@ $app->match('/product/create', function () use ($app) {
 	if(count($options) > 0){
 	    $form = $form->add('brand_id', 'choice', array(
 	        'required' => true,
+	        'label'    => '品牌',
 	        'choices' => $options,
 	        'expanded' => false,
 	        'constraints' => new Assert\Choice(array_keys($options))
 	    ));
 	}
 	else{
-	    $form = $form->add('brand_id', 'text', array('required' => true));
+	    $form = $form->add('brand_id', 'text', array('required' => true, 'label' => '品牌'));
 	}
 
-	$form = $form->add('size', 'text', array('required' => true));
-	$form = $form->add('unit', 'text', array('required' => true));
-	$form = $form->add('category2', 'textarea', array('required' => false));
-	$form = $form->add('package_code', 'text', array('required' => false));
-	$form = $form->add('bottle', 'file', array('required' => false));
-	$form = $form->add('minimal_order', 'text', array('required' => false));
-	$form = $form->add('pre_price', 'text', array('required' => true));
-	$form = $form->add('full_price', 'text', array('required' => true));
-	$form = $form->add('open_mould_period', 'text', array('required' => false));
-	$form = $form->add('sample_period', 'text', array('required' => false));
-	$form = $form->add('payment_method', 'text', array('required' => false));
-	$form = $form->add('supply_period', 'text', array('required' => false));
-	$form = $form->add('memo', 'textarea', array('required' => false));
-	$form = $form->add('code', 'text', array('required' => true));
 
+	$form = $form->add('size', 'text', array('required' => true, 'label' => '主规格数量'));
+	$form = $form->add('unit', 'text', array('required' => true, 'label' => '主规格单位'));
+	$form = $form->add('category2', 'text', array('required' => false, 'label' => '二级规格'));
+	$form = $form->add('package_code', 'text', array('required' => false, 'label' => '包材代码'));
+	$form = $form->add('bottle', 'file', array('required' => false, 'label' => '瓶器图片', 'data_class' => null));
+	$form = $form->add('minimal_order', 'text', array('required' => false, 'label' => '起订量'));
+	$form = $form->add('pre_price', 'text', array('required' => true, 'label' => '税前价格'));
+	$form = $form->add('full_price', 'text', array('required' => true, 'label' => '含税含运价格'));
+	$form = $form->add('open_mould_period', 'text', array('required' => false, 'label' => '开模周期'));
+	$form = $form->add('sample_period', 'text', array('required' => false, 'label' => '打样周期'));
+	$form = $form->add('payment_method', 'text', array('required' => false, 'label' => '付款方式'));
+	$form = $form->add('supply_period', 'text', array('required' => false, 'label' => '供货周期'));
+	$form = $form->add('memo', 'textarea', array('required' => false, 'label' => '备注'));
+	$form = $form->add('code', 'text', array('required' => true, 'label' => '成品编码'));
+
+$table_columns = array(
+		'id', 
+		'provider_id', 
+		'category_id', 
+		'size', 
+		'unit', 
+		'category2', 
+		'package_code', 
+		'bottle', 
+		'material_id', 
+		'minimal_order', 
+		'pre_price', 
+		'full_price', 
+		'open_mould_period', 
+		'sample_period', 
+		'payment_method', 
+		'supply_period', 
+		'memo', 
+		'brand_id', 
+		'code', 
+
+);
+
+$table_columns_type = array(
+		'int(11)', 
+		'int(11)', 
+		'char(1)', 
+		'int(11)', 
+		'varchar(2)', 
+		'varchar(255)', 
+		'char(14)', 
+		'blob', 
+		'char(2)', 
+		'int(11)', 
+		'decimal(8,2)', 
+		'decimal(8,2)', 
+		'varchar(8)', 
+		'varchar(8)', 
+		'varchar(8)', 
+		'varchar(8)', 
+		'text', 
+		'int(11)', 
+		'char(8)', 
+
+); 
 
     $form = $form->getForm();
 
@@ -367,21 +441,27 @@ $app->match('/product/create', function () use ($app) {
 
         if ($form->isValid()) {
             $data = $form->getData();
-						if ($bottleFile = $form['bottle']->getData()) {
-								$newFilename = uniqid().'.'.$bottleFile->guessExtension();
 
-								// Move the file to the directory where brochures are stored
-								try {
-										$bottleFile->move(
-												'resources/files/',
-												$newFilename
-										);
-								} catch (FileException $e) {
-										// ... handle exception if something happens during file upload
-								}
-								$data['bottle'] = $newFilename;
-						}
-            $update_query = "INSERT INTO `product` (`provider_id`, `category_id`, `size`, `unit`, `category2`, `package_code`, `bottle`, `material_id`, `minimal_order`, `pre_price`, `full_price`, `open_mould_period`, `sample_period`, `payment_method`, `supply_period`, `memo`, `brand_id`, `code`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            foreach ($table_columns_type as $key => $value) {
+                if(in_array($value, array('blob'))){
+                    $column = $table_columns[$key];
+                    if ($file = $form[$column]->getData()) {
+                        $newFilename = uniqid().'.'.$file->guessExtension();
+                        // Move the file to resources directory
+                        try {
+                            $file->move(
+                                'resources/files/',
+                                $newFilename
+                            );
+                        } catch (FileException $e) {
+                            //TODO ... handle exception if something happens during file upload
+                        }
+                        $data[$column] = $newFilename;
+                    }
+                }
+            }
+
+            $update_query = "INSERT INTO `product` (`provider_id`, `category_id`, `size`, `unit`, `category2`, `package_code`, `bottle`, `material_id`, `minimal_order`, `pre_price`, `full_price`, `open_mould_period`, `sample_period`, `payment_method`, `supply_period`, `memo`, `brand_id`, `code`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $app['db']->executeUpdate($update_query, array($data['provider_id'], $data['category_id'], $data['size'], $data['unit'], $data['category2'], $data['package_code'], $data['bottle'], $data['material_id'], $data['minimal_order'], $data['pre_price'], $data['full_price'], $data['open_mould_period'], $data['sample_period'], $data['payment_method'], $data['supply_period'], $data['memo'], $data['brand_id'], $data['code']));            
 
 
@@ -455,13 +535,14 @@ $app->match('/product/edit/{id}', function ($id) use ($app) {
 	if(count($options) > 0){
 	    $form = $form->add('provider_id', 'choice', array(
 	        'required' => true,
+	        'label'    => '供应商',
 	        'choices' => $options,
 	        'expanded' => false,
 	        'constraints' => new Assert\Choice(array_keys($options))
 	    ));
 	}
 	else{
-	    $form = $form->add('provider_id', 'text', array('required' => true));
+	    $form = $form->add('provider_id', 'text', array('required' => true, 'label' => '供应商'));
 	}
 
 	$options = array();
@@ -473,13 +554,14 @@ $app->match('/product/edit/{id}', function ($id) use ($app) {
 	if(count($options) > 0){
 	    $form = $form->add('category_id', 'choice', array(
 	        'required' => true,
+	        'label'    => '供应品类',
 	        'choices' => $options,
 	        'expanded' => false,
 	        'constraints' => new Assert\Choice(array_keys($options))
 	    ));
 	}
 	else{
-	    $form = $form->add('category_id', 'text', array('required' => true));
+	    $form = $form->add('category_id', 'text', array('required' => true, 'label' => '供应品类'));
 	}
 
 	$options = array();
@@ -491,13 +573,14 @@ $app->match('/product/edit/{id}', function ($id) use ($app) {
 	if(count($options) > 0){
 	    $form = $form->add('material_id', 'choice', array(
 	        'required' => true,
+	        'label'    => '材质',
 	        'choices' => $options,
 	        'expanded' => false,
 	        'constraints' => new Assert\Choice(array_keys($options))
 	    ));
 	}
 	else{
-	    $form = $form->add('material_id', 'text', array('required' => true));
+	    $form = $form->add('material_id', 'text', array('required' => true, 'label' => '材质'));
 	}
 
 	$options = array();
@@ -509,31 +592,77 @@ $app->match('/product/edit/{id}', function ($id) use ($app) {
 	if(count($options) > 0){
 	    $form = $form->add('brand_id', 'choice', array(
 	        'required' => true,
+	        'label'    => '品牌',
 	        'choices' => $options,
 	        'expanded' => false,
 	        'constraints' => new Assert\Choice(array_keys($options))
 	    ));
 	}
 	else{
-	    $form = $form->add('brand_id', 'text', array('required' => true));
+	    $form = $form->add('brand_id', 'text', array('required' => true, 'label' => '品牌'));
 	}
 
 
-	$form = $form->add('size', 'text', array('required' => true));
-	$form = $form->add('unit', 'text', array('required' => true));
-	$form = $form->add('category2', 'textarea', array('required' => false));
-	$form = $form->add('package_code', 'text', array('required' => false));
-	$form = $form->add('bottle', 'file', array('required' => false, 'data_class' => null));
-	$form = $form->add('minimal_order', 'text', array('required' => false));
-	$form = $form->add('pre_price', 'text', array('required' => true));
-	$form = $form->add('full_price', 'text', array('required' => true));
-	$form = $form->add('open_mould_period', 'text', array('required' => false));
-	$form = $form->add('sample_period', 'text', array('required' => false));
-	$form = $form->add('payment_method', 'text', array('required' => false));
-	$form = $form->add('supply_period', 'text', array('required' => false));
-	$form = $form->add('memo', 'textarea', array('required' => false));
-	$form = $form->add('code', 'text', array('required' => true));
+	$form = $form->add('size', 'text', array('required' => true, 'label' => '主规格数量'));
+	$form = $form->add('unit', 'text', array('required' => true, 'label' => '主规格单位'));
+	$form = $form->add('category2', 'text', array('required' => false, 'label' => '二级规格'));
+	$form = $form->add('package_code', 'text', array('required' => false, 'label' => '包材代码'));
+	$form = $form->add('bottle', 'file', array('required' => false, 'label' => '瓶器图片', 'data_class' => null));
+	$form = $form->add('minimal_order', 'text', array('required' => false, 'label' => '起订量'));
+	$form = $form->add('pre_price', 'text', array('required' => true, 'label' => '税前价格'));
+	$form = $form->add('full_price', 'text', array('required' => true, 'label' => '含税含运价格'));
+	$form = $form->add('open_mould_period', 'text', array('required' => false, 'label' => '开模周期'));
+	$form = $form->add('sample_period', 'text', array('required' => false, 'label' => '打样周期'));
+	$form = $form->add('payment_method', 'text', array('required' => false, 'label' => '付款方式'));
+	$form = $form->add('supply_period', 'text', array('required' => false, 'label' => '供货周期'));
+	$form = $form->add('memo', 'textarea', array('required' => false, 'label' => '备注'));
+	$form = $form->add('code', 'text', array('required' => true, 'label' => '成品编码'));
 
+$table_columns = array(
+		'id', 
+		'provider_id', 
+		'category_id', 
+		'size', 
+		'unit', 
+		'category2', 
+		'package_code', 
+		'bottle', 
+		'material_id', 
+		'minimal_order', 
+		'pre_price', 
+		'full_price', 
+		'open_mould_period', 
+		'sample_period', 
+		'payment_method', 
+		'supply_period', 
+		'memo', 
+		'brand_id', 
+		'code', 
+
+);
+
+$table_columns_type = array(
+		'int(11)', 
+		'int(11)', 
+		'char(1)', 
+		'int(11)', 
+		'varchar(2)', 
+		'varchar(255)', 
+		'char(14)', 
+		'blob', 
+		'char(2)', 
+		'int(11)', 
+		'decimal(8,2)', 
+		'decimal(8,2)', 
+		'varchar(8)', 
+		'varchar(8)', 
+		'varchar(8)', 
+		'varchar(8)', 
+		'text', 
+		'int(11)', 
+		'char(8)', 
+
+); 
 
     $form = $form->getForm();
 
@@ -543,22 +672,28 @@ $app->match('/product/edit/{id}', function ($id) use ($app) {
 
         if ($form->isValid()) {
             $data = $form->getData();
-						if ($bottleFile = $form['bottle']->getData()) {
-							$newFilename = uniqid().'.'.$bottleFile->guessExtension();
 
-							// Move the file to the directory where brochures are stored
-							try {
-									$bottleFile->move(
-											'resources/files/',
-											$newFilename
-									);
-							} catch (FileException $e) {
-									// ... handle exception if something happens during file upload
-							}
-							$data['bottle'] = $newFilename . ',' . $row_sql['bottle'];
-						} else {
-							$data['bottle'] = $row_sql['bottle'];
-						}
+            foreach ($table_columns_type as $key => $value) {
+                if(in_array($value, array('blob'))){
+                    $column = $table_columns[$key];
+                    if ($file = $form[$column]->getData()) {
+                        $newFilename = uniqid().'.'.$file->guessExtension();
+                        // Move the file to resources directory
+                        try {
+                            $file->move(
+                                'resources/files/',
+                                $newFilename
+                            );
+                        } catch (FileException $e) {
+                            //TODO ... handle exception if something happens during file upload
+                        }
+                        $data[$column] = $newFilename . ',' . $row_sql[$column];
+                    } else {
+                        $data[$column] = $row_sql[$column];
+                    }
+                }
+            }
+
             $update_query = "UPDATE `product` SET `provider_id` = ?, `category_id` = ?, `size` = ?, `unit` = ?, `category2` = ?, `package_code` = ?, `bottle` = ?, `material_id` = ?, `minimal_order` = ?, `pre_price` = ?, `full_price` = ?, `open_mould_period` = ?, `sample_period` = ?, `payment_method` = ?, `supply_period` = ?, `memo` = ?, `brand_id` = ?, `code` = ? WHERE `id` = ?";
             $app['db']->executeUpdate($update_query, array($data['provider_id'], $data['category_id'], $data['size'], $data['unit'], $data['category2'], $data['package_code'], $data['bottle'], $data['material_id'], $data['minimal_order'], $data['pre_price'], $data['full_price'], $data['open_mould_period'], $data['sample_period'], $data['payment_method'], $data['supply_period'], $data['memo'], $data['brand_id'], $data['code'], $id));            
 
@@ -646,9 +781,7 @@ $app->match('/product/downloadList', function (Symfony\Component\HttpFoundation\
 		'char(1)', 
 		'int(11)', 
 		'varchar(2)', 
-		'varchar(2)', 
-		'int(11)', 
-		'varchar(2)', 
+		'varchar(255)', 
 		'char(14)', 
 		'blob', 
 		'char(2)', 

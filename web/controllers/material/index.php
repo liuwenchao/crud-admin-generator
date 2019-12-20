@@ -162,10 +162,19 @@ $app->match('/material', function () use ($app) {
 
     );
 
+    $table_label_columns = array(
+		'id', 
+		'名字', 
+		'gmt_create', 
+		'gmt_modified', 
+
+    );
+
     $primary_key = "id";	
 
     return $app['twig']->render('material/list.html.twig', array(
     	"table_columns" => $table_columns,
+    	"table_label_columns" => $table_label_columns,
         "primary_key" => $primary_key
     ));
         
@@ -187,10 +196,10 @@ $app->match('/material/create', function () use ($app) {
     $form = $app['form.factory']->createBuilder('form', $initial_data);
 
 
-	$form = $form->add('id', 'text', array('required' => true));
-	$form = $form->add('name', 'text', array('required' => true));
-	$form = $form->add('gmt_create', 'text', array('required' => true));
-	$form = $form->add('gmt_modified', 'text', array('required' => true));
+	$form = $form->add('id', 'text', array('required' => true, 'label' => 'id'));
+	$form = $form->add('name', 'text', array('required' => true, 'label' => '名字'));
+	$form = $form->add('gmt_create', 'text', array('required' => true, 'label' => 'gmt_create'));
+	$form = $form->add('gmt_modified', 'text', array('required' => true, 'label' => 'gmt_modified'));
 
 $table_columns = array(
 		'id', 
@@ -288,10 +297,10 @@ $app->match('/material/edit/{id}', function ($id) use ($app) {
     $form = $app['form.factory']->createBuilder('form', $initial_data);
 
 
-	$form = $form->add('id', 'text', array('required' => true));
-	$form = $form->add('name', 'text', array('required' => true));
-	$form = $form->add('gmt_create', 'text', array('required' => true));
-	$form = $form->add('gmt_modified', 'text', array('required' => true));
+	$form = $form->add('id', 'text', array('required' => true, 'label' => 'id'));
+	$form = $form->add('name', 'text', array('required' => true, 'label' => '名字'));
+	$form = $form->add('gmt_create', 'text', array('required' => true, 'label' => 'gmt_create'));
+	$form = $form->add('gmt_modified', 'text', array('required' => true, 'label' => 'gmt_modified'));
 
 $table_columns = array(
 		'id', 

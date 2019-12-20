@@ -189,10 +189,28 @@ $app->match('/provider', function () use ($app) {
 
     );
 
+    $table_label_columns = array(
+		'id', 
+		'编码', 
+		'名字', 
+		'营业执照', 
+		'地址', 
+		'联系人', 
+		'电话', 
+		'工厂背景', 
+		'研发实力', 
+		'产能', 
+		'价格', 
+		'账期', 
+		'服务', 
+
+    );
+
     $primary_key = "id";	
 
     return $app['twig']->render('provider/list.html.twig', array(
     	"table_columns" => $table_columns,
+    	"table_label_columns" => $table_label_columns,
         "primary_key" => $primary_key
     ));
         
@@ -222,18 +240,18 @@ $app->match('/provider/create', function () use ($app) {
     $form = $app['form.factory']->createBuilder('form', $initial_data);
 
 
-	$form = $form->add('code', 'text', array('required' => true));
-	$form = $form->add('name', 'text', array('required' => true));
-	$form = $form->add('license', 'text', array('required' => true));
-	$form = $form->add('address', 'text', array('required' => true));
-	$form = $form->add('contact', 'text', array('required' => true));
-	$form = $form->add('phone', 'text', array('required' => true));
-	$form = $form->add('background', 'text', array('required' => true));
-	$form = $form->add('technology', 'text', array('required' => true));
-	$form = $form->add('capacity', 'text', array('required' => true));
-	$form = $form->add('price', 'text', array('required' => true));
-	$form = $form->add('net', 'text', array('required' => true));
-	$form = $form->add('service', 'text', array('required' => true));
+	$form = $form->add('code', 'text', array('required' => true, 'label' => '编码'));
+	$form = $form->add('name', 'text', array('required' => true, 'label' => '名字'));
+	$form = $form->add('license', 'text', array('required' => true, 'label' => '营业执照'));
+	$form = $form->add('address', 'text', array('required' => true, 'label' => '地址'));
+	$form = $form->add('contact', 'text', array('required' => true, 'label' => '联系人'));
+	$form = $form->add('phone', 'text', array('required' => true, 'label' => '电话'));
+	$form = $form->add('background', 'text', array('required' => true, 'label' => '工厂背景'));
+	$form = $form->add('technology', 'text', array('required' => true, 'label' => '研发实力'));
+	$form = $form->add('capacity', 'text', array('required' => true, 'label' => '产能'));
+	$form = $form->add('price', 'text', array('required' => true, 'label' => '价格'));
+	$form = $form->add('net', 'text', array('required' => true, 'label' => '账期'));
+	$form = $form->add('service', 'text', array('required' => true, 'label' => '服务'));
 
 $table_columns = array(
 		'id', 
@@ -357,18 +375,18 @@ $app->match('/provider/edit/{id}', function ($id) use ($app) {
     $form = $app['form.factory']->createBuilder('form', $initial_data);
 
 
-	$form = $form->add('code', 'text', array('required' => true));
-	$form = $form->add('name', 'text', array('required' => true));
-	$form = $form->add('license', 'text', array('required' => true));
-	$form = $form->add('address', 'text', array('required' => true));
-	$form = $form->add('contact', 'text', array('required' => true));
-	$form = $form->add('phone', 'text', array('required' => true));
-	$form = $form->add('background', 'text', array('required' => true));
-	$form = $form->add('technology', 'text', array('required' => true));
-	$form = $form->add('capacity', 'text', array('required' => true));
-	$form = $form->add('price', 'text', array('required' => true));
-	$form = $form->add('net', 'text', array('required' => true));
-	$form = $form->add('service', 'text', array('required' => true));
+	$form = $form->add('code', 'text', array('required' => true, 'label' => '编码'));
+	$form = $form->add('name', 'text', array('required' => true, 'label' => '名字'));
+	$form = $form->add('license', 'text', array('required' => true, 'label' => '营业执照'));
+	$form = $form->add('address', 'text', array('required' => true, 'label' => '地址'));
+	$form = $form->add('contact', 'text', array('required' => true, 'label' => '联系人'));
+	$form = $form->add('phone', 'text', array('required' => true, 'label' => '电话'));
+	$form = $form->add('background', 'text', array('required' => true, 'label' => '工厂背景'));
+	$form = $form->add('technology', 'text', array('required' => true, 'label' => '研发实力'));
+	$form = $form->add('capacity', 'text', array('required' => true, 'label' => '产能'));
+	$form = $form->add('price', 'text', array('required' => true, 'label' => '价格'));
+	$form = $form->add('net', 'text', array('required' => true, 'label' => '账期'));
+	$form = $form->add('service', 'text', array('required' => true, 'label' => '服务'));
 
 $table_columns = array(
 		'id', 

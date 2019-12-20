@@ -52,7 +52,7 @@ $app->match('/brand/list', function (Symfony\Component\HttpFoundation\Request $r
     
     $table_columns_type = array(
 		'int(11)', 
-		'varchar(8)', 
+		'char(8)', 
 
     );    
     
@@ -156,10 +156,17 @@ $app->match('/brand', function () use ($app) {
 
     );
 
+    $table_label_columns = array(
+		'id', 
+		'名字', 
+
+    );
+
     $primary_key = "id";	
 
     return $app['twig']->render('brand/list.html.twig', array(
     	"table_columns" => $table_columns,
+    	"table_label_columns" => $table_label_columns,
         "primary_key" => $primary_key
     ));
         
@@ -178,7 +185,7 @@ $app->match('/brand/create', function () use ($app) {
     $form = $app['form.factory']->createBuilder('form', $initial_data);
 
 
-	$form = $form->add('name', 'text', array('required' => false));
+	$form = $form->add('name', 'text', array('required' => true, 'label' => '名字'));
 
 $table_columns = array(
 		'id', 
@@ -188,7 +195,7 @@ $table_columns = array(
 
 $table_columns_type = array(
 		'int(11)', 
-		'varchar(8)', 
+		'char(8)', 
 
 ); 
 
@@ -269,7 +276,7 @@ $app->match('/brand/edit/{id}', function ($id) use ($app) {
     $form = $app['form.factory']->createBuilder('form', $initial_data);
 
 
-	$form = $form->add('name', 'text', array('required' => false));
+	$form = $form->add('name', 'text', array('required' => true, 'label' => '名字'));
 
 $table_columns = array(
 		'id', 
@@ -279,7 +286,7 @@ $table_columns = array(
 
 $table_columns_type = array(
 		'int(11)', 
-		'varchar(8)', 
+		'char(8)', 
 
 ); 
 
@@ -379,7 +386,7 @@ $app->match('/brand/downloadList', function (Symfony\Component\HttpFoundation\Re
     
     $table_columns_type = array(
 		'int(11)', 
-		'varchar(8)', 
+		'char(8)', 
 
     );   
 

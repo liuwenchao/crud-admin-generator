@@ -183,10 +183,26 @@ $app->match('/trademark', function () use ($app) {
 
     );
 
+    $table_label_columns = array(
+		'id', 
+		'名字', 
+		'图片', 
+		'商标号', 
+		'申请人', 
+		'类别', 
+		'申请日期', 
+		'初审公告日期', 
+		'注册日期', 
+		'使用商品范围', 
+		'状态', 
+
+    );
+
     $primary_key = "id";	
 
     return $app['twig']->render('trademark/list.html.twig', array(
     	"table_columns" => $table_columns,
+    	"table_label_columns" => $table_label_columns,
         "primary_key" => $primary_key
     ));
         
@@ -214,16 +230,16 @@ $app->match('/trademark/create', function () use ($app) {
     $form = $app['form.factory']->createBuilder('form', $initial_data);
 
 
-	$form = $form->add('name', 'text', array('required' => true));
-	$form = $form->add('logo', 'file', array('required' => true, 'data_class' => null));
-	$form = $form->add('number', 'text', array('required' => true));
-	$form = $form->add('owner', 'text', array('required' => true));
-	$form = $form->add('category', 'text', array('required' => true));
-	$form = $form->add('apply_date', 'text', array('required' => true));
-	$form = $form->add('publish_date', 'text', array('required' => true));
-	$form = $form->add('register_date', 'text', array('required' => true));
-	$form = $form->add('scope', 'textarea', array('required' => false));
-	$form = $form->add('status', 'text', array('required' => true));
+	$form = $form->add('name', 'text', array('required' => true, 'label' => '名字'));
+	$form = $form->add('logo', 'file', array('required' => true, 'label' => '图片', 'data_class' => null));
+	$form = $form->add('number', 'text', array('required' => true, 'label' => '商标号'));
+	$form = $form->add('owner', 'text', array('required' => true, 'label' => '申请人'));
+	$form = $form->add('category', 'text', array('required' => true, 'label' => '类别'));
+	$form = $form->add('apply_date', 'text', array('required' => true, 'label' => '申请日期'));
+	$form = $form->add('publish_date', 'text', array('required' => true, 'label' => '初审公告日期'));
+	$form = $form->add('register_date', 'text', array('required' => true, 'label' => '注册日期'));
+	$form = $form->add('scope', 'textarea', array('required' => false, 'label' => '使用商品范围'));
+	$form = $form->add('status', 'text', array('required' => true, 'label' => '状态'));
 
 $table_columns = array(
 		'id', 
@@ -341,16 +357,16 @@ $app->match('/trademark/edit/{id}', function ($id) use ($app) {
     $form = $app['form.factory']->createBuilder('form', $initial_data);
 
 
-	$form = $form->add('name', 'text', array('required' => true));
-	$form = $form->add('logo', 'file', array('required' => true, 'data_class' => null));
-	$form = $form->add('number', 'text', array('required' => true));
-	$form = $form->add('owner', 'text', array('required' => true));
-	$form = $form->add('category', 'text', array('required' => true));
-	$form = $form->add('apply_date', 'text', array('required' => true));
-	$form = $form->add('publish_date', 'text', array('required' => true));
-	$form = $form->add('register_date', 'text', array('required' => true));
-	$form = $form->add('scope', 'textarea', array('required' => false));
-	$form = $form->add('status', 'text', array('required' => true));
+	$form = $form->add('name', 'text', array('required' => true, 'label' => '名字'));
+	$form = $form->add('logo', 'file', array('required' => true, 'label' => '图片', 'data_class' => null));
+	$form = $form->add('number', 'text', array('required' => true, 'label' => '商标号'));
+	$form = $form->add('owner', 'text', array('required' => true, 'label' => '申请人'));
+	$form = $form->add('category', 'text', array('required' => true, 'label' => '类别'));
+	$form = $form->add('apply_date', 'text', array('required' => true, 'label' => '申请日期'));
+	$form = $form->add('publish_date', 'text', array('required' => true, 'label' => '初审公告日期'));
+	$form = $form->add('register_date', 'text', array('required' => true, 'label' => '注册日期'));
+	$form = $form->add('scope', 'textarea', array('required' => false, 'label' => '使用商品范围'));
+	$form = $form->add('status', 'text', array('required' => true, 'label' => '状态'));
 
 $table_columns = array(
 		'id', 
