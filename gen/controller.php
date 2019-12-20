@@ -36,7 +36,7 @@ $app->match('/__TABLENAME__/list', function (Symfony\Component\HttpFoundation\Re
        
     $rows = array();
     
-    $searchValue = $search['value'];
+    $searchValue = str_replace("'","",$search['value']);
     $orderValue = $order[0];
     
     $orderClause = "";
