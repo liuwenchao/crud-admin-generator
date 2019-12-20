@@ -42,7 +42,7 @@ $console
 		}
 
 		foreach($dbTables as $dbTableKey => $dbTable){
-			$getTableColumnsQuery = "SHOW COLUMNS FROM `" . $dbTable['name'] . "`";
+			$getTableColumnsQuery = "SHOW FULL COLUMNS FROM `" . $dbTable['name'] . "`";
 			$getTableColumnsResult = $app['db']->fetchAll($getTableColumnsQuery, array());
 
 			foreach($getTableColumnsResult as $getTableColumnResult){
@@ -103,6 +103,7 @@ $console
 
 					$table_columns[] = array(
 						"name" => $column['Field'],
+						"label" => empty($column['Comment']) ? $column['Field'] : $column['Comment'],
 						"primary" => $column['Field'] == $primary_key ? true : false,
 						"nullable" => $column['Null'] == "NO" ? true : false,
 						"auto" => $column['Extra'] == "auto_increment" ? true : false,
@@ -135,7 +136,8 @@ $console
 			$TABLE_PRIMARYKEY = $table['primary_key'];
 
 			$TABLECOLUMNS_ARRAY = "";
-			$TABLECOLUMNS_TYPE_ARRAY = "";			
+			$TABLECOLUMNS_TYPE_ARRAY = "";		
+			$TABLECOLUMNS_LABEL_ARRAY = "";	
 			$TABLECOLUMNS_INITIALDATA_EMPTY_ARRAY = "";
 			$TABLECOLUMNS_INITIALDATA_ARRAY = "";
 
@@ -169,6 +171,7 @@ $console
 			foreach($table_columns as $table_column){
 				$TABLECOLUMNS_ARRAY .= "\t\t" . "'". $table_column['name'] . "', \n";
 				$TABLECOLUMNS_TYPE_ARRAY .= "\t\t" . "'". $table_column['type'] . "', \n";				
+				$TABLECOLUMNS_LABEL_ARRAY .= "\t\t" . "'". $table_column['label'] . "', \n";				
 				if(!$table_column['primary'] || ($table_column['primary'] && !$table_column['auto'])){
 					$TABLECOLUMNS_INITIALDATA_EMPTY_ARRAY .= "\t\t" . "'". $table_column['name'] . "' => '', \n";
 					$TABLECOLUMNS_INITIALDATA_ARRAY .= "\t\t" . "'". $table_column['name'] . "' => \$row_sql['".$table_column['name']."'], \n";
@@ -258,13 +261,14 @@ $console
 					"\t" . "if(count(\$options) > 0){" . "\n" .
 					"\t" . "    \$form = \$form->add('" . $table_column['name'] . "', 'choice', array(" . "\n" .
 					"\t" . "        'required' => " . $field_nullable . "," . "\n" .
+					"\t" . "        'label'    => '" . $table_column['label'] . "'," . "\n" .
 					"\t" . "        'choices' => \$options," . "\n" .
 					"\t" . "        'expanded' => false," . "\n" .
 					"\t" . "        'constraints' => new Assert\Choice(array_keys(\$options))" . "\n" .
 					"\t" . "    ));" . "\n" .
 					"\t" . "}" . "\n" .
 					"\t" . "else{" . "\n" .
-					"\t" . "    \$form = \$form->add('" . $table_column['name'] . "', 'text', array('required' => " . $field_nullable . "));" . "\n" .
+					"\t" . "    \$form = \$form->add('" . $table_column['name'] . "', 'text', array('required' => " . $field_nullable . ", 'label' => '" . $table_column['label'] . "'));" . "\n" .
 					"\t" . "}" . "\n\n";
 
 					$count_externals++;
@@ -274,20 +278,20 @@ $console
 
 						if(strpos($table_column['type'], 'text') !== false){
 							$FIELDS_FOR_FORM .= "" .
-							"\t" . "\$form = \$form->add('" . $table_column['name'] . "', 'textarea', array('required' => " . $field_nullable . "));" . "\n";
+							"\t" . "\$form = \$form->add('" . $table_column['name'] . "', 'textarea', array('required' => " . $field_nullable . ", 'label' => '" . $table_column['label'] . "'));" . "\n";
 						}
 						else if(strpos($table_column['type'], 'blob') !== false){
 							$FIELDS_FOR_FORM .= "" .
-							"\t" . "\$form = \$form->add('" . $table_column['name'] . "', 'file', array('required' => " . $field_nullable . ", 'data_class' => null));" . "\n";
+							"\t" . "\$form = \$form->add('" . $table_column['name'] . "', 'file', array('required' => " . $field_nullable . ", 'label' => '" . $table_column['label'] . "', 'data_class' => null));" . "\n";
 						}
 						else{
 							$FIELDS_FOR_FORM .= "" .
-							"\t" . "\$form = \$form->add('" . $table_column['name'] . "', 'text', array('required' => " . $field_nullable . "));" . "\n";
+							"\t" . "\$form = \$form->add('" . $table_column['name'] . "', 'text', array('required' => " . $field_nullable . ", 'label' => '" . $table_column['label'] . "'));" . "\n";
 						}
 					}
 					else if($table_column['primary'] && !$table_column['auto']){
 							$FIELDS_FOR_FORM .= "" .
-							"\t" . "\$form = \$form->add('" . $table_column['name'] . "', 'text', array('required' => " . $field_nullable . "));" . "\n";
+							"\t" . "\$form = \$form->add('" . $table_column['name'] . "', 'text', array('required' => " . $field_nullable . ", 'label' => '" . $table_column['label'] . "'));" . "\n";
 					}
 				}
 			}
@@ -348,6 +352,7 @@ $console
 			$_controller = str_replace("__TABLE_PRIMARYKEY__", $TABLE_PRIMARYKEY, $_controller);
 			$_controller = str_replace("__TABLECOLUMNS_ARRAY__", $TABLECOLUMNS_ARRAY, $_controller);
 			$_controller = str_replace("__TABLECOLUMNS_TYPE_ARRAY__", $TABLECOLUMNS_TYPE_ARRAY, $_controller);			
+			$_controller = str_replace("__TABLECOLUMNS_LABEL_ARRAY__", $TABLECOLUMNS_LABEL_ARRAY, $_controller);			
 			$_controller = str_replace("__TABLECOLUMNS_INITIALDATA_EMPTY_ARRAY__", $TABLECOLUMNS_INITIALDATA_EMPTY_ARRAY, $_controller);
 			$_controller = str_replace("__TABLECOLUMNS_INITIALDATA_ARRAY__", $TABLECOLUMNS_INITIALDATA_ARRAY, $_controller);
 			$_controller = str_replace("__EXTERNALS_FOR_LIST__", $EXTERNALS_FOR_LIST, $_controller);

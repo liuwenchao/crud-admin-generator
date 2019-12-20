@@ -139,10 +139,15 @@ $app->match('/__TABLENAME__', function () use ($app) {
 __TABLECOLUMNS_ARRAY__
     );
 
+    $table_label_columns = array(
+__TABLECOLUMNS_LABEL_ARRAY__
+    );
+
     $primary_key = "__TABLE_PRIMARYKEY__";	
 
     return $app['twig']->render('__TABLENAME__/list.html.twig', array(
     	"table_columns" => $table_columns,
+    	"table_label_columns" => $table_label_columns,
         "primary_key" => $primary_key
     ));
         
