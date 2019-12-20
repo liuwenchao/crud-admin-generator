@@ -27,7 +27,8 @@ require_once __DIR__.'/trademark/index.php';
 
 $app->match('/', function () use ($app) {
 
-    return $app['twig']->render('ag_dashboard.html.twig', array());
+    // return $app['twig']->render('ag_dashboard.html.twig', array());
+    return $app->redirect('/product', 301);
         
 })
 ->bind('dashboard');
