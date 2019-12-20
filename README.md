@@ -25,6 +25,8 @@ Clone the repository
 Download composer:
 
     curl -sS https://getcomposer.org/installer | php
+    composer config -g repo.packagist composer https://packagist.phpcomposer.com # if in China
+
 
 Install vendors:
 
