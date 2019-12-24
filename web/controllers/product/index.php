@@ -73,7 +73,7 @@ $app->match('/product/list', function (Symfony\Component\HttpFoundation\Request 
 		'char(1)', 
 		'int(11)', 
 		'varchar(2)', 
-		'varchar(255)', 
+		'text', 
 		'char(14)', 
 		'blob', 
 		'char(2)', 
@@ -374,7 +374,7 @@ $app->match('/product/create', function () use ($app) {
 
 	$form = $form->add('size', 'text', array('required' => true, 'label' => '主规格数量'));
 	$form = $form->add('unit', 'text', array('required' => true, 'label' => '主规格单位'));
-	$form = $form->add('category2', 'text', array('required' => false, 'label' => '二级规格'));
+	$form = $form->add('category2', 'textarea', array('required' => false, 'label' => '二级规格'));
 	$form = $form->add('package_code', 'text', array('required' => false, 'label' => '包材代码'));
 	$form = $form->add('bottle', 'file', array('required' => false, 'label' => '瓶器图片', 'data_class' => null));
 	$form = $form->add('minimal_order', 'text', array('required' => false, 'label' => '起订量'));
@@ -416,7 +416,7 @@ $table_columns_type = array(
 		'char(1)', 
 		'int(11)', 
 		'varchar(2)', 
-		'varchar(255)', 
+		'text', 
 		'char(14)', 
 		'blob', 
 		'char(2)', 
@@ -605,7 +605,7 @@ $app->match('/product/edit/{id}', function ($id) use ($app) {
 
 	$form = $form->add('size', 'text', array('required' => true, 'label' => '主规格数量'));
 	$form = $form->add('unit', 'text', array('required' => true, 'label' => '主规格单位'));
-	$form = $form->add('category2', 'text', array('required' => false, 'label' => '二级规格'));
+	$form = $form->add('category2', 'textarea', array('required' => false, 'label' => '二级规格'));
 	$form = $form->add('package_code', 'text', array('required' => false, 'label' => '包材代码'));
 	$form = $form->add('bottle', 'file', array('required' => false, 'label' => '瓶器图片', 'data_class' => null));
 	$form = $form->add('minimal_order', 'text', array('required' => false, 'label' => '起订量'));
@@ -781,7 +781,7 @@ $app->match('/product/downloadList', function (Symfony\Component\HttpFoundation\
 		'char(1)', 
 		'int(11)', 
 		'varchar(2)', 
-		'varchar(255)', 
+		'text', 
 		'char(14)', 
 		'blob', 
 		'char(2)', 

@@ -8,6 +8,9 @@
     <script type="text/javascript">
         $(function() {
             $("#product_list").dataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Chinese.json"
+                },
 				serverSide: true,
 				ajax: {
 				    "url": "product/list",
@@ -50,7 +53,7 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
-                    Product list
+                    产品列表
                 </h1>
             </section>
 
@@ -68,7 +71,7 @@
                             </div><!-- /.box-header -->
 
                             <div class="box-body table-responsive">
-                                <a class="btn btn-primary" href="{{ path('product_create') }}">Create new product</a>
+                                <a class="btn btn-primary" href="{{ path('product_create') }}">录入新产品</a>
 <!--
 <a class="btn btn-primary" href="{{ path('product_downloadList') }}">Download list of product as PDF</a>
 -->
@@ -79,7 +82,7 @@
                                             {% for table_column in table_label_columns %}
                                             <th class="text-nowrap" style="min-width:80px;">{{ table_column }}</th>
                                             {% endfor %}
-                                            <th>Actions</th>
+                                            <th>操作</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -87,7 +90,7 @@
                                             {% for table_column in table_label_columns %}
                                             <th>{{ table_column }}</th>
                                             {% endfor %}
-                                            <th>Actions</th>
+                                            <th>操作</th>
                                         </tr>
                                     </tfoot>
                                 </table>
