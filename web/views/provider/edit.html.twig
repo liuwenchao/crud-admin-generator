@@ -63,6 +63,11 @@
 									</div>
 
 									<div class='form-group'>
+									    {{ form_label(form.product) }}
+									    {{ form_widget(form.product, { attr: { 'class': 'form-control' }}) }}
+									</div>
+
+									<div class='form-group'>
 									    {{ form_label(form.background) }}
 									    {{ form_widget(form.background, { attr: { 'class': 'form-control' }}) }}
 									</div>

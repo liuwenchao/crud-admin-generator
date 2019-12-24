@@ -168,10 +168,11 @@ CREATE TABLE `provider` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '编码',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名字',
-  `license` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '营业执照',
+  `license` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '营业执照编号',
   `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '地址',
   `contact` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '联系人',
   `phone` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '电话',
+  `product` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '主营产品',
   `background` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '工厂背景',
   `technology` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '研发实力',
   `capacity` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '产能',
@@ -188,7 +189,7 @@ CREATE TABLE `provider` (
 
 LOCK TABLES `provider` WRITE;
 /*!40000 ALTER TABLE `provider` DISABLE KEYS */;
-INSERT INTO `provider` VALUES (1,'SEEFU','金华惜福制造有限公司','datada','金华二服路188号','王惜福','17375757575',18,17,15,10,20,14),(2,'WANCA','余姚旺财制造有限公司','datada','余姚大发路39号','李旺财','17353535353',20,15,18,19,20,12);
+INSERT INTO `provider` VALUES (1,'SEEFU','金华惜福制造有限公司','datada','金华二服路188号','王惜福','17375757575','',18,17,15,10,20,14),(2,'WANCA','余姚旺财制造有限公司','datada','余姚大发路39号','李旺财','17353535353','',20,15,18,19,20,12);
 /*!40000 ALTER TABLE `provider` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -234,4 +235,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-20 21:16:28
+-- Dump completed on 2019-12-24 10:22:09

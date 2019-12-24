@@ -52,6 +52,7 @@ $app->match('/provider/list', function (Symfony\Component\HttpFoundation\Request
 		'address', 
 		'contact', 
 		'phone', 
+		'product', 
 		'background', 
 		'technology', 
 		'capacity', 
@@ -69,6 +70,7 @@ $app->match('/provider/list', function (Symfony\Component\HttpFoundation\Request
 		'varchar(255)', 
 		'varchar(255)', 
 		'varchar(15)', 
+		'varchar(255)', 
 		'smallint(5) unsigned', 
 		'smallint(5) unsigned', 
 		'smallint(5) unsigned', 
@@ -180,6 +182,7 @@ $app->match('/provider', function () use ($app) {
 		'address', 
 		'contact', 
 		'phone', 
+		'product', 
 		'background', 
 		'technology', 
 		'capacity', 
@@ -193,10 +196,11 @@ $app->match('/provider', function () use ($app) {
 		'id', 
 		'编码', 
 		'名字', 
-		'营业执照', 
+		'营业执照编号', 
 		'地址', 
 		'联系人', 
 		'电话', 
+		'主营产品', 
 		'工厂背景', 
 		'研发实力', 
 		'产能', 
@@ -228,6 +232,7 @@ $app->match('/provider/create', function () use ($app) {
 		'address' => '', 
 		'contact' => '', 
 		'phone' => '', 
+		'product' => '', 
 		'background' => '', 
 		'technology' => '', 
 		'capacity' => '', 
@@ -242,10 +247,11 @@ $app->match('/provider/create', function () use ($app) {
 
 	$form = $form->add('code', 'text', array('required' => true, 'label' => '编码'));
 	$form = $form->add('name', 'text', array('required' => true, 'label' => '名字'));
-	$form = $form->add('license', 'text', array('required' => true, 'label' => '营业执照'));
+	$form = $form->add('license', 'text', array('required' => false, 'label' => '营业执照编号'));
 	$form = $form->add('address', 'text', array('required' => true, 'label' => '地址'));
 	$form = $form->add('contact', 'text', array('required' => true, 'label' => '联系人'));
 	$form = $form->add('phone', 'text', array('required' => true, 'label' => '电话'));
+	$form = $form->add('product', 'text', array('required' => true, 'label' => '主营产品'));
 	$form = $form->add('background', 'text', array('required' => true, 'label' => '工厂背景'));
 	$form = $form->add('technology', 'text', array('required' => true, 'label' => '研发实力'));
 	$form = $form->add('capacity', 'text', array('required' => true, 'label' => '产能'));
@@ -261,6 +267,7 @@ $table_columns = array(
 		'address', 
 		'contact', 
 		'phone', 
+		'product', 
 		'background', 
 		'technology', 
 		'capacity', 
@@ -278,6 +285,7 @@ $table_columns_type = array(
 		'varchar(255)', 
 		'varchar(255)', 
 		'varchar(15)', 
+		'varchar(255)', 
 		'smallint(5) unsigned', 
 		'smallint(5) unsigned', 
 		'smallint(5) unsigned', 
@@ -315,8 +323,8 @@ $table_columns_type = array(
                 }
             }
 
-            $update_query = "INSERT INTO `provider` (`code`, `name`, `license`, `address`, `contact`, `phone`, `background`, `technology`, `capacity`, `price`, `net`, `service`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $app['db']->executeUpdate($update_query, array($data['code'], $data['name'], $data['license'], $data['address'], $data['contact'], $data['phone'], $data['background'], $data['technology'], $data['capacity'], $data['price'], $data['net'], $data['service']));            
+            $update_query = "INSERT INTO `provider` (`code`, `name`, `license`, `address`, `contact`, `phone`, `product`, `background`, `technology`, `capacity`, `price`, `net`, `service`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $app['db']->executeUpdate($update_query, array($data['code'], $data['name'], $data['license'], $data['address'], $data['contact'], $data['phone'], $data['product'], $data['background'], $data['technology'], $data['capacity'], $data['price'], $data['net'], $data['service']));            
 
 
             $app['session']->getFlashBag()->add(
@@ -362,6 +370,7 @@ $app->match('/provider/edit/{id}', function ($id) use ($app) {
 		'address' => $row_sql['address'], 
 		'contact' => $row_sql['contact'], 
 		'phone' => $row_sql['phone'], 
+		'product' => $row_sql['product'], 
 		'background' => $row_sql['background'], 
 		'technology' => $row_sql['technology'], 
 		'capacity' => $row_sql['capacity'], 
@@ -377,10 +386,11 @@ $app->match('/provider/edit/{id}', function ($id) use ($app) {
 
 	$form = $form->add('code', 'text', array('required' => true, 'label' => '编码'));
 	$form = $form->add('name', 'text', array('required' => true, 'label' => '名字'));
-	$form = $form->add('license', 'text', array('required' => true, 'label' => '营业执照'));
+	$form = $form->add('license', 'text', array('required' => false, 'label' => '营业执照编号'));
 	$form = $form->add('address', 'text', array('required' => true, 'label' => '地址'));
 	$form = $form->add('contact', 'text', array('required' => true, 'label' => '联系人'));
 	$form = $form->add('phone', 'text', array('required' => true, 'label' => '电话'));
+	$form = $form->add('product', 'text', array('required' => true, 'label' => '主营产品'));
 	$form = $form->add('background', 'text', array('required' => true, 'label' => '工厂背景'));
 	$form = $form->add('technology', 'text', array('required' => true, 'label' => '研发实力'));
 	$form = $form->add('capacity', 'text', array('required' => true, 'label' => '产能'));
@@ -396,6 +406,7 @@ $table_columns = array(
 		'address', 
 		'contact', 
 		'phone', 
+		'product', 
 		'background', 
 		'technology', 
 		'capacity', 
@@ -413,6 +424,7 @@ $table_columns_type = array(
 		'varchar(255)', 
 		'varchar(255)', 
 		'varchar(15)', 
+		'varchar(255)', 
 		'smallint(5) unsigned', 
 		'smallint(5) unsigned', 
 		'smallint(5) unsigned', 
@@ -452,8 +464,8 @@ $table_columns_type = array(
                 }
             }
 
-            $update_query = "UPDATE `provider` SET `code` = ?, `name` = ?, `license` = ?, `address` = ?, `contact` = ?, `phone` = ?, `background` = ?, `technology` = ?, `capacity` = ?, `price` = ?, `net` = ?, `service` = ? WHERE `id` = ?";
-            $app['db']->executeUpdate($update_query, array($data['code'], $data['name'], $data['license'], $data['address'], $data['contact'], $data['phone'], $data['background'], $data['technology'], $data['capacity'], $data['price'], $data['net'], $data['service'], $id));            
+            $update_query = "UPDATE `provider` SET `code` = ?, `name` = ?, `license` = ?, `address` = ?, `contact` = ?, `phone` = ?, `product` = ?, `background` = ?, `technology` = ?, `capacity` = ?, `price` = ?, `net` = ?, `service` = ? WHERE `id` = ?";
+            $app['db']->executeUpdate($update_query, array($data['code'], $data['name'], $data['license'], $data['address'], $data['contact'], $data['phone'], $data['product'], $data['background'], $data['technology'], $data['capacity'], $data['price'], $data['net'], $data['service'], $id));            
 
 
             $app['session']->getFlashBag()->add(
@@ -518,6 +530,7 @@ $app->match('/provider/downloadList', function (Symfony\Component\HttpFoundation
 		'address', 
 		'contact', 
 		'phone', 
+		'product', 
 		'background', 
 		'technology', 
 		'capacity', 
@@ -535,6 +548,7 @@ $app->match('/provider/downloadList', function (Symfony\Component\HttpFoundation
 		'varchar(255)', 
 		'varchar(255)', 
 		'varchar(15)', 
+		'varchar(255)', 
 		'smallint(5) unsigned', 
 		'smallint(5) unsigned', 
 		'smallint(5) unsigned', 

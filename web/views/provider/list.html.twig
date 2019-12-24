@@ -21,6 +21,7 @@
 					{ "data": "address"},
 					{ "data": "contact"},
 					{ "data": "phone"},
+					{ "data": "product"},
                     {
 						"orderable": false,
 						"data": null,
@@ -36,7 +37,7 @@
 				],
 				rowCallback: function( row, data ) {
 					var actions = '<a href="provider/edit/' + data.{{primary_key}} + '" class="btn btn-primary btn-xs">Edit</a> <a href="provider/delete/' + data.{{primary_key}} + '" onclick="return confirm_delete();" class="btn btn-danger btn-xs">Delete</a>';
-					$('td:eq(7)', row).html( actions );
+					$('td:eq(8)', row).html( actions );
                 },
                 initComplete: function( settings, json ) {
                     $.each($('.radar-cell'), function(i, e){
@@ -144,6 +145,7 @@
                                             <th>地址</th>
                                             <th>联系人</th>
                                             <th>电话</th>
+                                            <th>主营产品</th>
                                             <th style="width: 200px">雷达图</th>
                                             <th>操作</th>
                                         </tr>
