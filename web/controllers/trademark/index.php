@@ -219,11 +219,11 @@ $app->match('/trademark/create', function () use ($app) {
 		'number' => '', 
 		'owner' => '', 
 		'category' => '', 
-		'apply_date' => '', 
-		'publish_date' => '', 
-		'register_date' => '', 
+		'apply_date' => '2019-10-01', 
+		'publish_date' => '2019-10-01', 
+		'register_date' => '2019-10-01', 
 		'scope' => '', 
-		'status' => '', 
+		'status' => '申请中', 
 
     );
 

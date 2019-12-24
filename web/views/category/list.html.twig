@@ -8,6 +8,9 @@
     <script type="text/javascript">
         $(function() {
             $("#category_list").dataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Chinese.json"
+                },
 				serverSide: true,
 				ajax: {
 				    "url": "category/list",

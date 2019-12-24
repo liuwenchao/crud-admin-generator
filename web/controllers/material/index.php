@@ -46,6 +46,7 @@ $app->match('/material/list', function (Symfony\Component\HttpFoundation\Request
     
     $table_columns = array(
 		'id', 
+		'code', 
 		'name', 
 		'gmt_create', 
 		'gmt_modified', 
@@ -53,6 +54,7 @@ $app->match('/material/list', function (Symfony\Component\HttpFoundation\Request
     );
     
     $table_columns_type = array(
+		'bigint(20) unsigned', 
 		'char(2)', 
 		'char(8)', 
 		'timestamp', 
@@ -156,6 +158,7 @@ $app->match('/material', function () use ($app) {
     
 	$table_columns = array(
 		'id', 
+		'code', 
 		'name', 
 		'gmt_create', 
 		'gmt_modified', 
@@ -164,9 +167,10 @@ $app->match('/material', function () use ($app) {
 
     $table_label_columns = array(
 		'id', 
+		'编码', 
 		'名字', 
-		'gmt_create', 
-		'gmt_modified', 
+		'创建时间', 
+		'上次修改时间', 
 
     );
 
@@ -186,23 +190,20 @@ $app->match('/material', function () use ($app) {
 $app->match('/material/create', function () use ($app) {
     
     $initial_data = array(
-		'id' => '', 
+		'code' => '', 
 		'name' => '', 
-		'gmt_create' => '', 
-		'gmt_modified' => '', 
 
     );
 
     $form = $app['form.factory']->createBuilder('form', $initial_data);
 
 
-	$form = $form->add('id', 'text', array('required' => true, 'label' => 'id'));
+	$form = $form->add('code', 'text', array('required' => true, 'label' => '编码'));
 	$form = $form->add('name', 'text', array('required' => true, 'label' => '名字'));
-	$form = $form->add('gmt_create', 'text', array('required' => true, 'label' => 'gmt_create'));
-	$form = $form->add('gmt_modified', 'text', array('required' => true, 'label' => 'gmt_modified'));
 
 $table_columns = array(
 		'id', 
+		'code', 
 		'name', 
 		'gmt_create', 
 		'gmt_modified', 
@@ -210,6 +211,7 @@ $table_columns = array(
 );
 
 $table_columns_type = array(
+		'bigint(20) unsigned', 
 		'char(2)', 
 		'char(8)', 
 		'timestamp', 
@@ -245,8 +247,8 @@ $table_columns_type = array(
                 }
             }
 
-            $update_query = "INSERT INTO `material` (`id`, `name`, `gmt_create`, `gmt_modified`) VALUES (?, ?, ?, ?)";
-            $app['db']->executeUpdate($update_query, array($data['id'], $data['name'], $data['gmt_create'], $data['gmt_modified']));            
+            $update_query = "INSERT INTO `material` (`code`, `name`) VALUES (?, ?)";
+            $app['db']->executeUpdate($update_query, array($data['code'], $data['name']));            
 
 
             $app['session']->getFlashBag()->add(
@@ -286,10 +288,8 @@ $app->match('/material/edit/{id}', function ($id) use ($app) {
 
     
     $initial_data = array(
-		'id' => $row_sql['id'], 
+		'code' => $row_sql['code'], 
 		'name' => $row_sql['name'], 
-		'gmt_create' => $row_sql['gmt_create'], 
-		'gmt_modified' => $row_sql['gmt_modified'], 
 
     );
 
@@ -297,13 +297,12 @@ $app->match('/material/edit/{id}', function ($id) use ($app) {
     $form = $app['form.factory']->createBuilder('form', $initial_data);
 
 
-	$form = $form->add('id', 'text', array('required' => true, 'label' => 'id'));
+	$form = $form->add('code', 'text', array('required' => true, 'label' => '编码'));
 	$form = $form->add('name', 'text', array('required' => true, 'label' => '名字'));
-	$form = $form->add('gmt_create', 'text', array('required' => true, 'label' => 'gmt_create'));
-	$form = $form->add('gmt_modified', 'text', array('required' => true, 'label' => 'gmt_modified'));
 
 $table_columns = array(
 		'id', 
+		'code', 
 		'name', 
 		'gmt_create', 
 		'gmt_modified', 
@@ -311,6 +310,7 @@ $table_columns = array(
 );
 
 $table_columns_type = array(
+		'bigint(20) unsigned', 
 		'char(2)', 
 		'char(8)', 
 		'timestamp', 
@@ -348,8 +348,8 @@ $table_columns_type = array(
                 }
             }
 
-            $update_query = "UPDATE `material` SET `id` = ?, `name` = ?, `gmt_create` = ?, `gmt_modified` = ? WHERE `id` = ?";
-            $app['db']->executeUpdate($update_query, array($data['id'], $data['name'], $data['gmt_create'], $data['gmt_modified'], $id));            
+            $update_query = "UPDATE `material` SET `code` = ?, `name` = ? WHERE `id` = ?";
+            $app['db']->executeUpdate($update_query, array($data['code'], $data['name'], $id));            
 
 
             $app['session']->getFlashBag()->add(
@@ -408,6 +408,7 @@ $app->match('/material/downloadList', function (Symfony\Component\HttpFoundation
     
     $table_columns = array(
 		'id', 
+		'code', 
 		'name', 
 		'gmt_create', 
 		'gmt_modified', 
@@ -415,6 +416,7 @@ $app->match('/material/downloadList', function (Symfony\Component\HttpFoundation
     );
     
     $table_columns_type = array(
+		'bigint(20) unsigned', 
 		'char(2)', 
 		'char(8)', 
 		'timestamp', 
