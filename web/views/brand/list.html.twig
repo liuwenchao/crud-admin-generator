@@ -7,7 +7,14 @@
     <!-- page script -->
     <script type="text/javascript">
         $(function() {
+            var langauages = {
+                "en-US": "English",
+                "zh-CN": "Chinese"
+            };
             $("#brand_list").dataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/"+langauages[navigator.language]+".json"
+                },
 				serverSide: true,
 				ajax: {
 				    "url": "brand/list",

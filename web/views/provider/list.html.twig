@@ -8,7 +8,14 @@
     <script src="https://cdn.staticfile.org/echarts/4.4.0-rc.1/echarts.min.js"></script>
     <script type="text/javascript">
         $(function() {
+            var langauages = {
+                "en-US": "English",
+                "zh-CN": "Chinese"
+            };
             $("#provider_list").dataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/"+langauages[navigator.language]+".json"
+                },
 				serverSide: true,
 				ajax: {
 				    "url": "provider/list",

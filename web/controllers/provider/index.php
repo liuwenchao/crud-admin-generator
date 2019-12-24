@@ -233,12 +233,12 @@ $app->match('/provider/create', function () use ($app) {
 		'contact' => '', 
 		'phone' => '', 
 		'product' => '', 
-		'background' => '', 
-		'technology' => '', 
-		'capacity' => '', 
-		'price' => '', 
-		'net' => '', 
-		'service' => '', 
+		'background' => '0', 
+		'technology' => '0', 
+		'capacity' => '0', 
+		'price' => '0', 
+		'net' => '0', 
+		'service' => '0', 
 
     );
 
