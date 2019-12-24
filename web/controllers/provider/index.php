@@ -41,7 +41,7 @@ $app->match('/provider/list', function (Symfony\Component\HttpFoundation\Request
     
     $orderClause = "";
     if($orderValue) {
-        $orderClause = " ORDER BY ". $columns[(int)$orderValue['column']]['data'] . " " . $orderValue['dir'];
+        $orderClause = " ORDER BY provider.". $columns[(int)$orderValue['column']]['data'] . " " . $orderValue['dir'];
     }
     
     $table_columns = array(
@@ -93,14 +93,14 @@ $app->match('/provider/list', function (Symfony\Component\HttpFoundation\Request
             $whereClause =  $whereClause . " OR"; 
         }
         
-        $whereClause =  $whereClause . " " . $col . " LIKE '%". $searchValue ."%'";
-        
+        $whereClause =  $whereClause . " provider." . $col . " LIKE '%". $searchValue ."%'";
         $i = $i + 1;
     }
+    $whereClause .=  "";
     
-    $recordsTotal = $app['db']->fetchColumn("SELECT COUNT(*) FROM `provider`" . $whereClause . $orderClause, array(), 0);
+    $recordsTotal = $app['db']->fetchColumn("SELECT COUNT(*) FROM `provider` " . $whereClause . $orderClause, array(), 0);
     
-    $find_sql = "SELECT * FROM `provider`". $whereClause . $orderClause . " LIMIT ". $index . "," . $rowsPerPage;
+    $find_sql = "SELECT * FROM `provider` ". $whereClause . $orderClause . " LIMIT ". $index . "," . $rowsPerPage;
     $rows_sql = $app['db']->fetchAll($find_sql, array());
 
     foreach($rows_sql as $row_key => $row_sql){

@@ -41,7 +41,7 @@ $app->match('/brand/list', function (Symfony\Component\HttpFoundation\Request $r
     
     $orderClause = "";
     if($orderValue) {
-        $orderClause = " ORDER BY ". $columns[(int)$orderValue['column']]['data'] . " " . $orderValue['dir'];
+        $orderClause = " ORDER BY brand.". $columns[(int)$orderValue['column']]['data'] . " " . $orderValue['dir'];
     }
     
     $table_columns = array(
@@ -69,14 +69,14 @@ $app->match('/brand/list', function (Symfony\Component\HttpFoundation\Request $r
             $whereClause =  $whereClause . " OR"; 
         }
         
-        $whereClause =  $whereClause . " " . $col . " LIKE '%". $searchValue ."%'";
-        
+        $whereClause =  $whereClause . " brand." . $col . " LIKE '%". $searchValue ."%'";
         $i = $i + 1;
     }
+    $whereClause .=  "";
     
-    $recordsTotal = $app['db']->fetchColumn("SELECT COUNT(*) FROM `brand`" . $whereClause . $orderClause, array(), 0);
+    $recordsTotal = $app['db']->fetchColumn("SELECT COUNT(*) FROM `brand` " . $whereClause . $orderClause, array(), 0);
     
-    $find_sql = "SELECT * FROM `brand`". $whereClause . $orderClause . " LIMIT ". $index . "," . $rowsPerPage;
+    $find_sql = "SELECT * FROM `brand` ". $whereClause . $orderClause . " LIMIT ". $index . "," . $rowsPerPage;
     $rows_sql = $app['db']->fetchAll($find_sql, array());
 
     foreach($rows_sql as $row_key => $row_sql){

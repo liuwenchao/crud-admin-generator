@@ -41,7 +41,7 @@ $app->match('/product/list', function (Symfony\Component\HttpFoundation\Request 
     
     $orderClause = "";
     if($orderValue) {
-        $orderClause = " ORDER BY a.". $columns[(int)$orderValue['column']]['data'] . " " . $orderValue['dir'];
+        $orderClause = " ORDER BY product.". $columns[(int)$orderValue['column']]['data'] . " " . $orderValue['dir'];
     }
     
     $table_columns = array(
@@ -103,19 +103,14 @@ $app->match('/product/list', function (Symfony\Component\HttpFoundation\Request 
             $whereClause =  $whereClause . " OR"; 
         }
         
-        $whereClause =  $whereClause . " a." . $col . " LIKE '%". $searchValue ."%'";
-        
+        $whereClause =  $whereClause . " product." . $col . " LIKE '%". $searchValue ."%'";
         $i = $i + 1;
-	}
-	//TODO optimize the sql performance here.
-	$whereClause =  $whereClause . " OR b.name LIKE '%". $searchValue ."%'";
-	$whereClause =  $whereClause . " OR c.name LIKE '%". $searchValue ."%'";
-	$whereClause =  $whereClause . " OR d.name LIKE '%". $searchValue ."%'";
-	$whereClause =  $whereClause . " OR e.name LIKE '%". $searchValue ."%'";
-	
-    $recordsTotal = $app['db']->fetchColumn("SELECT COUNT(*) FROM `product` a inner join provider b on a.provider_id = b.id inner join category c on a.category_id=c.id inner join material d on a.material_id = d.id inner join brand e on a.brand_id = e.id" . $whereClause . $orderClause, array(), 0);
+    }
+    $whereClause .=  " OR provider.name LIKE '%". $searchValue ."%' OR category.name LIKE '%". $searchValue ."%' OR material.name LIKE '%". $searchValue ."%' OR brand.name LIKE '%". $searchValue ."%'";
     
-    $find_sql = "SELECT a.* FROM `product` a inner join provider b on a.provider_id = b.id inner join category c on a.category_id=c.id inner join material d on a.material_id = d.id inner join brand e on a.brand_id = e.id". $whereClause . $orderClause . " LIMIT ". $index . "," . $rowsPerPage;
+    $recordsTotal = $app['db']->fetchColumn("SELECT COUNT(*) FROM `product`  INNER JOIN provider on product.provider_id = provider.id INNER JOIN category on product.category_id = category.id INNER JOIN material on product.material_id = material.id INNER JOIN brand on product.brand_id = brand.id" . $whereClause . $orderClause, array(), 0);
+    
+    $find_sql = "SELECT * FROM `product`  INNER JOIN provider on product.provider_id = provider.id INNER JOIN category on product.category_id = category.id INNER JOIN material on product.material_id = material.id INNER JOIN brand on product.brand_id = brand.id". $whereClause . $orderClause . " LIMIT ". $index . "," . $rowsPerPage;
     $rows_sql = $app['db']->fetchAll($find_sql, array());
 
     foreach($rows_sql as $row_key => $row_sql){

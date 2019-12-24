@@ -41,7 +41,7 @@ $app->match('/boom/list', function (Symfony\Component\HttpFoundation\Request $re
     
     $orderClause = "";
     if($orderValue) {
-        $orderClause = " ORDER BY ". $columns[(int)$orderValue['column']]['data'] . " " . $orderValue['dir'];
+        $orderClause = " ORDER BY boom.". $columns[(int)$orderValue['column']]['data'] . " " . $orderValue['dir'];
     }
     
     $table_columns = array(
@@ -73,14 +73,14 @@ $app->match('/boom/list', function (Symfony\Component\HttpFoundation\Request $re
             $whereClause =  $whereClause . " OR"; 
         }
         
-        $whereClause =  $whereClause . " " . $col . " LIKE '%". $searchValue ."%'";
-        
+        $whereClause =  $whereClause . " boom." . $col . " LIKE '%". $searchValue ."%'";
         $i = $i + 1;
     }
+    $whereClause .=  " OR product.id LIKE '%". $searchValue ."%'";
     
-    $recordsTotal = $app['db']->fetchColumn("SELECT COUNT(*) FROM `boom`" . $whereClause . $orderClause, array(), 0);
+    $recordsTotal = $app['db']->fetchColumn("SELECT COUNT(*) FROM `boom`  INNER JOIN product on boom.product_id = product.id" . $whereClause . $orderClause, array(), 0);
     
-    $find_sql = "SELECT * FROM `boom`". $whereClause . $orderClause . " LIMIT ". $index . "," . $rowsPerPage;
+    $find_sql = "SELECT * FROM `boom`  INNER JOIN product on boom.product_id = product.id". $whereClause . $orderClause . " LIMIT ". $index . "," . $rowsPerPage;
     $rows_sql = $app['db']->fetchAll($find_sql, array());
 
     foreach($rows_sql as $row_key => $row_sql){
