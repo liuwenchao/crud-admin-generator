@@ -166,13 +166,13 @@ __TABLECOLUMNS_INITIALDATA_EMPTY_ARRAY__
 
 __EXTERNALSFIELDS_FOR_FORM__
 __FIELDS_FOR_FORM__
-    $table_columns = array(
+$table_columns = array(
 __TABLECOLUMNS_ARRAY__
-    );
+);
 
-    $table_columns_type = array(
+$table_columns_type = array(
 __TABLECOLUMNS_TYPE_ARRAY__
-    ); 
+); 
 
     $form = $form->getForm();
 
