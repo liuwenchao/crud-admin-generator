@@ -154,6 +154,8 @@ $console
 			$TABLECOLUMNS_INITIALDATA_ARRAY = "";
 
 			$EXTERNALS_FOR_LIST = "";
+			$EXTERNALS_FOR_SEARCH = "";
+			$EXTERNALS_INNER_JOIN = "";
 			$EXTERNALSFIELDS_FOR_FORM = "";
 			$FIELDS_FOR_FORM = "";
 
@@ -263,6 +265,8 @@ $console
 					"\t\t\t" . "    \$rows[\$row_key][\$table_columns[\$i]] = \$findexternal_row['" . $external_select_field . "'];" . "\n" .
 					"\t\t\t" . "}" . "\n";
 
+					$EXTERNALS_FOR_SEARCH .= " OR ".$table_column['external'].".".$external_select_field." LIKE '%\". \$searchValue .\"%'";
+					$EXTERNALS_INNER_JOIN .= " INNER JOIN ".$table_column['external']." on ".$table_name.".".$table_column['external']."_id = ".$table_column['external'].".id";
 
 					$EXTERNALSFIELDS_FOR_FORM .= "" .
 					"\t" . "\$options = array();" . "\n" .
@@ -369,6 +373,8 @@ $console
 			$_controller = str_replace("__TABLECOLUMNS_INITIALDATA_EMPTY_ARRAY__", $TABLECOLUMNS_INITIALDATA_EMPTY_ARRAY, $_controller);
 			$_controller = str_replace("__TABLECOLUMNS_INITIALDATA_ARRAY__", $TABLECOLUMNS_INITIALDATA_ARRAY, $_controller);
 			$_controller = str_replace("__EXTERNALS_FOR_LIST__", $EXTERNALS_FOR_LIST, $_controller);
+			$_controller = str_replace("__EXTERNALS_FOR_SEARCH__", $EXTERNALS_FOR_SEARCH, $_controller);
+			$_controller = str_replace("__EXTERNALS_INNER_JOIN__", $EXTERNALS_INNER_JOIN, $_controller);
 			$_controller = str_replace("__EXTERNALSFIELDS_FOR_FORM__", $EXTERNALSFIELDS_FOR_FORM, $_controller);
 			$_controller = str_replace("__FIELDS_FOR_FORM__", $FIELDS_FOR_FORM, $_controller);
 

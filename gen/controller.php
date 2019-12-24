@@ -41,7 +41,7 @@ $app->match('/__TABLENAME__/list', function (Symfony\Component\HttpFoundation\Re
     
     $orderClause = "";
     if($orderValue) {
-        $orderClause = " ORDER BY ". $columns[(int)$orderValue['column']]['data'] . " " . $orderValue['dir'];
+        $orderClause = " ORDER BY __TABLENAME__.". $columns[(int)$orderValue['column']]['data'] . " " . $orderValue['dir'];
     }
     
     $table_columns = array(
@@ -65,14 +65,14 @@ __TABLECOLUMNS_TYPE_ARRAY__
             $whereClause =  $whereClause . " OR"; 
         }
         
-        $whereClause =  $whereClause . " " . $col . " LIKE '%". $searchValue ."%'";
-        
+        $whereClause =  $whereClause . " __TABLENAME__." . $col . " LIKE '%". $searchValue ."%'";
         $i = $i + 1;
     }
+    $whereClause .=  "__EXTERNALS_FOR_SEARCH__";
     
-    $recordsTotal = $app['db']->fetchColumn("SELECT COUNT(*) FROM `__TABLENAME__`" . $whereClause . $orderClause, array(), 0);
+    $recordsTotal = $app['db']->fetchColumn("SELECT COUNT(*) FROM `__TABLENAME__` __EXTERNALS_INNER_JOIN__" . $whereClause . $orderClause, array(), 0);
     
-    $find_sql = "SELECT * FROM `__TABLENAME__`". $whereClause . $orderClause . " LIMIT ". $index . "," . $rowsPerPage;
+    $find_sql = "SELECT * FROM `__TABLENAME__` __EXTERNALS_INNER_JOIN__". $whereClause . $orderClause . " LIMIT ". $index . "," . $rowsPerPage;
     $rows_sql = $app['db']->fetchAll($find_sql, array());
 
     foreach($rows_sql as $row_key => $row_sql){
