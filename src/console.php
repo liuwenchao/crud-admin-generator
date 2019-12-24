@@ -392,6 +392,14 @@ $console
 			$_edit_template = str_replace("__TABLENAMEUP__", ucfirst(strtolower($TABLENAME)), $_edit_template);
 			$_edit_template = str_replace("__EDIT_FORM_TEMPLATE__", $EDIT_FORM_TEMPLATE, $_edit_template);
 
+
+
+			$generate_file = function($file_address, $content, $output) {
+				$fp = fopen($file_address, "w+");
+				fwrite($fp, $content);
+				fclose($fp);
+				$output->writeln('<info>'.$file_address.'</info>');
+			};
 			if (empty($specific_table)) {
 				$_menu_template = file_get_contents(__DIR__.'/../gen/menu.html.twig');
 				$_menu_template = str_replace("__MENU_OPTIONS__", $MENU_OPTIONS, $_menu_template);
@@ -400,33 +408,17 @@ $console
 				$_base_file = str_replace("__BASE_INCLUDES__", $BASE_INCLUDES, $_base_file);
 
 
-				$fp = fopen(__DIR__."/../web/controllers/base.php", "w+");
-				fwrite($fp, $_base_file);
-				fclose($fp);
-
-				$fp = fopen(__DIR__."/../web/views/menu.html.twig", "w+");
-				fwrite($fp, $_menu_template);
-				fclose($fp);
+				$generate_file(__DIR__."/../web/controllers/base.php", $_base_file, $output);
+				$generate_file(__DIR__."/../web/views/menu.html.twig", $_menu_template, $output);
 			}
 
 			@mkdir(__DIR__."/../web/controllers/".$TABLENAME, 0755);
 			@mkdir(__DIR__."/../web/views/".$TABLENAME, 0755);
 
-			$fp = fopen(__DIR__."/../web/controllers/".$TABLENAME."/index.php", "w+");
-			fwrite($fp, $_controller);
-			fclose($fp);
-
-			$fp = fopen(__DIR__."/../web/views/".$TABLENAME."/create.html.twig", "w+");
-			fwrite($fp, $_create_template);
-			fclose($fp);
-
-			$fp = fopen(__DIR__."/../web/views/".$TABLENAME."/edit.html.twig", "w+");
-			fwrite($fp, $_edit_template);
-			fclose($fp);
-
-			$fp = fopen(__DIR__."/../web/views/".$TABLENAME."/list.html.twig", "w+");
-			fwrite($fp, $_list_template);
-			fclose($fp);
+			$generate_file(__DIR__."/../web/controllers/".$TABLENAME."/index.php", $_controller, $output);
+			$generate_file(__DIR__."/../web/views/".$TABLENAME."/create.html.twig", $_create_template, $output);
+			$generate_file(__DIR__."/../web/views/".$TABLENAME."/edit.html.twig", $_edit_template, $output);
+			$generate_file(__DIR__."/../web/views/".$TABLENAME."/list.html.twig",  $_list_template, $output);
 		}
 
 });
