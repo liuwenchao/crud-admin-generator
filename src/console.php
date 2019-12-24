@@ -14,6 +14,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Doctrine\DBAL\Schema\Table;
 
@@ -21,15 +22,25 @@ $console = new Application('CRUD Admin Generator command instalation', '1.0');
 
 $console
 	->register('generate:admin')
-	->setDefinition(array())
+	->setDefinition(new InputDefinition(array(
+		new InputArgument('table', InputArgument::OPTIONAL, 'The name of the specific table to generate.')
+	)))
 	->setDescription("Generate administrator")
 	->setCode(function (InputInterface $input, OutputInterface $output) use ($app) {
 
-		$getTablesQuery = "SHOW TABLES";
+		if($specific_table = $input->getArgument('table')) {
+			$getTablesQuery = "SHOW TABLES LIKE '" . $specific_table . "'";
+		} else {
+			$getTablesQuery = "SHOW TABLES";
+		}
 		$getTablesResult = $app['db']->fetchAll($getTablesQuery, array());
 
 		$_dbTables = array();
 		$dbTables = array();
+
+		if($specific_table && empty($getTablesResult)) {
+			throw new \InvalidArgumentException("Table $specific_table is not found!");
+		}
 
 		foreach($getTablesResult as $getTableResult){
 
@@ -381,11 +392,22 @@ $console
 			$_edit_template = str_replace("__TABLENAMEUP__", ucfirst(strtolower($TABLENAME)), $_edit_template);
 			$_edit_template = str_replace("__EDIT_FORM_TEMPLATE__", $EDIT_FORM_TEMPLATE, $_edit_template);
 
-			$_menu_template = file_get_contents(__DIR__.'/../gen/menu.html.twig');
-			$_menu_template = str_replace("__MENU_OPTIONS__", $MENU_OPTIONS, $_menu_template);
+			if (empty($specific_table)) {
+				$_menu_template = file_get_contents(__DIR__.'/../gen/menu.html.twig');
+				$_menu_template = str_replace("__MENU_OPTIONS__", $MENU_OPTIONS, $_menu_template);
+	
+				$_base_file = file_get_contents(__DIR__.'/../gen/base.php');
+				$_base_file = str_replace("__BASE_INCLUDES__", $BASE_INCLUDES, $_base_file);
 
-			$_base_file = file_get_contents(__DIR__.'/../gen/base.php');
-			$_base_file = str_replace("__BASE_INCLUDES__", $BASE_INCLUDES, $_base_file);
+
+				$fp = fopen(__DIR__."/../web/controllers/base.php", "w+");
+				fwrite($fp, $_base_file);
+				fclose($fp);
+
+				$fp = fopen(__DIR__."/../web/views/menu.html.twig", "w+");
+				fwrite($fp, $_menu_template);
+				fclose($fp);
+			}
 
 			@mkdir(__DIR__."/../web/controllers/".$TABLENAME, 0755);
 			@mkdir(__DIR__."/../web/views/".$TABLENAME, 0755);
@@ -405,15 +427,6 @@ $console
 			$fp = fopen(__DIR__."/../web/views/".$TABLENAME."/list.html.twig", "w+");
 			fwrite($fp, $_list_template);
 			fclose($fp);
-
-			$fp = fopen(__DIR__."/../web/controllers/base.php", "w+");
-			fwrite($fp, $_base_file);
-			fclose($fp);
-
-			$fp = fopen(__DIR__."/../web/views/menu.html.twig", "w+");
-			fwrite($fp, $_menu_template);
-			fclose($fp);
-
 		}
 
 });
