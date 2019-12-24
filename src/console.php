@@ -119,6 +119,7 @@ $console
 						"nullable" => $column['Null'] == "NO" ? true : false,
 						"auto" => $column['Extra'] == "auto_increment" ? true : false,
 						"external" => $column['Field'] != $primary_key ? $external_table : false,
+						"default" => $column['Default'],
 						"type" => $column['Type']
 					);
 				}
@@ -183,8 +184,9 @@ $console
 				$TABLECOLUMNS_ARRAY .= "\t\t" . "'". $table_column['name'] . "', \n";
 				$TABLECOLUMNS_TYPE_ARRAY .= "\t\t" . "'". $table_column['type'] . "', \n";				
 				$TABLECOLUMNS_LABEL_ARRAY .= "\t\t" . "'". $table_column['label'] . "', \n";				
-				if(!$table_column['primary'] || ($table_column['primary'] && !$table_column['auto'])){
-					$TABLECOLUMNS_INITIALDATA_EMPTY_ARRAY .= "\t\t" . "'". $table_column['name'] . "' => '', \n";
+				if($table_column['default'] !== "CURRENT_TIMESTAMP"
+					&& !($table_column['primary'] && $table_column['auto'])){
+					$TABLECOLUMNS_INITIALDATA_EMPTY_ARRAY .= "\t\t" . "'". $table_column['name'] . "' => '".$table_column['default']."', \n";
 					$TABLECOLUMNS_INITIALDATA_ARRAY .= "\t\t" . "'". $table_column['name'] . "' => \$row_sql['".$table_column['name']."'], \n";
 
 					$INSERT_QUERY_FIELDS[] = "`" . $table_column['name'] . "`";
@@ -285,7 +287,7 @@ $console
 					$count_externals++;
 				}
 				else{
-					if(!$table_column['primary']){
+					if(!$table_column['primary'] && $table_column['default'] !== "CURRENT_TIMESTAMP"){
 
 						if(strpos($table_column['type'], 'text') !== false){
 							$FIELDS_FOR_FORM .= "" .
