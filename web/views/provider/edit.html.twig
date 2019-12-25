@@ -7,15 +7,7 @@
         {% include 'menu.html.twig' with {'option': 'provider_edit'} %}
 
         <!-- Right side column. Contains the navbar and content of the page -->
-        <aside class="right-side">                
-            <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <h1>
-                    Edit Provider {{ id }}
-                </h1>
-            </section>
-
-            <!-- Main content -->
+        <aside class="right-side">
             <section class="content">
 
                 {% include 'ag_alerts.html.twig' %}
@@ -104,7 +96,7 @@
                                 {{ form_rest(form) }}
 
                                 <div class="box-footer">
-                                    <button type="submit" class="btn btn-primary">Edit</button>
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-save fa-lg"></i></button>
                                 </div>
 
                             </div><!-- /.box -->

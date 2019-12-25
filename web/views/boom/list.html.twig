@@ -15,6 +15,7 @@
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/"+langauages[navigator.language]+".json"
                 },
+                searchDelay: 1000,
 				serverSide: true,
 				ajax: {
 				    "url": "boom/list",
@@ -31,7 +32,7 @@
 					}
 				],
 				rowCallback: function( row, data ) {
-					var actions = '<a href="boom/edit/' + data.{{primary_key}} + '" class="btn btn-primary btn-xs">Edit</a> <a href="boom/delete/' + data.{{primary_key}} + '" onclick="return confirm_delete();" class="btn btn-danger btn-xs">Delete</a>';
+					var actions = '<a href="boom/edit/' + data.{{primary_key}} + '" class="btn btn-primary btn-xs"><i class="fa fa-edit fa-lg"></i></a> <a href="boom/delete/' + data.{{primary_key}} + '" onclick="return confirm_delete();" class="btn btn-danger btn-xs"><i class="fa fa-trash-o fa-lg"></i></a>';
 					$('td:eq({{ table_columns|length }})', row).html( actions );
 				}
 			});
@@ -53,13 +54,7 @@
         {% include 'menu.html.twig' with {'option': 'boom_list'} %}
 
         <!-- Right side column. Contains the navbar and content of the page -->
-        <aside class="right-side">                
-            <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <h1>
-                    Boom list
-                </h1>
-            </section>
+        <aside class="right-side">
 
             <!-- Main content -->
             <section class="content">
@@ -75,28 +70,20 @@
                             </div><!-- /.box-header -->
 
                             <div class="box-body table-responsive">
-                                <a class="btn btn-primary" href="{{ path('boom_create') }}">Create new boom</a>
+                                <a class="btn btn-primary" href="{{ path('boom_create') }}">&#43;</a>
 <!--
-<a class="btn btn-primary" href="{{ path('boom_downloadList') }}">Download list of boom as PDF</a>
+<a class="btn btn-primary" href="{{ path('boom_downloadList') }}"><i class="fa fa-download fa-lg"></i></a>
 -->
                                 <br /><br />
                                 <table id="boom_list" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
                                             {% for table_column in table_label_columns %}
-                                            <th class="text-nowrap">{{ table_column }}</th>
+                                            <th style="min-width: 5rem">{{ table_column }}</th>
                                             {% endfor %}
-                                            <th>Actions</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
-                                        <tr>
-                                            {% for table_column in table_label_columns %}
-                                            <th>{{ table_column }}</th>
-                                            {% endfor %}
-                                            <th>Actions</th>
-                                        </tr>
-                                    </tfoot>
                                 </table>
                             </div><!-- /.box-body -->
                         </div><!-- /.box -->
