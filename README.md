@@ -1,4 +1,4 @@
- CCRUD Admin Generator
+CRUD Admin Generator
 ===================
 
 What is CRUD Admin Generator?
